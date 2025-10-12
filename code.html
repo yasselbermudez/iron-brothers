@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#1414b8",
+            "background-light": "#f6f6f8",
+            "background-dark": "#111121",
+          },
+          fontFamily: {
+            "display": ["Space Grotesk"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<header class="sticky top-0 z-10 border-b border-primary/20 bg-background-light/80 pb-3 pt-4 backdrop-blur-sm dark:border-primary/30 dark:bg-background-dark/80">
+<nav class="flex justify-around">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-xs font-medium tracking-wide">Dashboard</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-black/60 dark:text-white/60" href="#">
+<span class="material-symbols-outlined">fitness_center</span>
+<p class="text-xs font-medium tracking-wide">Gym</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-black/60 dark:text-white/60" href="#">
+<span class="material-symbols-outlined">playing_cards</span>
+<p class="text-xs font-medium tracking-wide">Poker</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-black/60 dark:text-white/60" href="#">
+<span class="material-symbols-outlined">groups</span>
+<p class="text-xs font-medium tracking-wide">Vida</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-black/60 dark:text-white/60" href="#">
+<span class="material-symbols-outlined">person</span>
+<p class="text-xs font-medium tracking-wide">Perfil</p>
+</a>
+</nav>
+</header>
+<main class="flex-grow p-4">
+<div class="mb-8 text-center">
+<h1 class="text-3xl font-bold tracking-tight text-black dark:text-white">Dashboard de Amistades</h1>
+<p class="mt-2 text-base text-black/70 dark:text-white/70">Un seguimiento de nuestro progreso y locuras.</p>
+</div>
+<section class="mb-8">
+<h2 class="px-4 pb-3 pt-5 text-2xl font-bold tracking-tight text-black dark:text-white">Datos del Gym</h2>
+<div class="grid grid-cols-2 gap-4 sm:grid-cols-3">
+<div class="flex flex-col gap-2 rounded-lg bg-primary/10 p-4 text-center dark:bg-primary/20">
+<p class="text-sm font-medium text-black/70 dark:text-white/70">% Asistencia</p>
+<p class="text-3xl font-bold tracking-tight text-black dark:text-white">85%</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg bg-primary/10 p-4 text-center dark:bg-primary/20">
+<p class="text-sm font-medium text-black/70 dark:text-white/70">Press Banca Max</p>
+<p class="text-3xl font-bold tracking-tight text-black dark:text-white">120kg</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg bg-primary/10 p-4 text-center dark:bg-primary/20">
+<p class="text-sm font-medium text-black/70 dark:text-white/70">Récord Paralelas</p>
+<p class="text-3xl font-bold tracking-tight text-black dark:text-white">35</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg bg-primary/10 p-4 text-center dark:bg-primary/20">
+<p class="text-sm font-medium text-black/70 dark:text-white/70">Integrantes</p>
+<p class="text-3xl font-bold tracking-tight text-black dark:text-white">5</p>
+</div>
+<div class="col-span-2 flex flex-col gap-2 rounded-lg bg-primary/10 p-4 text-center dark:bg-primary/20 sm:col-span-1">
+<p class="text-sm font-medium text-black/70 dark:text-white/70">IPF GL Más Alto</p>
+<p class="text-3xl font-bold tracking-tight text-black dark:text-white">95.3</p>
+</div>
+</div>
+</section>
+<section class="mb-8">
+<h2 class="px-4 pb-3 pt-5 text-2xl font-bold tracking-tight text-black dark:text-white">Cosas del Poker</h2>
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+<div class="rounded-lg bg-primary/10 p-6 dark:bg-primary/20">
+<h3 class="mb-3 text-lg font-bold text-black dark:text-white">Estadísticas</h3>
+<p class="text-base font-medium text-black/70 dark:text-white/70">Ganancias Totales: <span class="font-bold text-primary">$2,500</span></p>
+<p class="text-base font-medium text-black/70 dark:text-white/70">Partidas Jugadas: <span class="font-bold text-black dark:text-white">42</span></p>
+</div>
+<div class="rounded-lg bg-primary/10 p-6 dark:bg-primary/20">
+<h3 class="mb-3 text-lg font-bold text-black dark:text-white">Puntuaciones y Récords</h3>
+<p class="text-base font-medium text-black/70 dark:text-white/70">Mayor Bote: <span class="font-bold text-primary">$500</span></p>
+<p class="text-base font-medium text-black/70 dark:text-white/70">Mejor Mano: <span class="font-bold text-black dark:text-white">Poker de Ases</span></p>
+</div>
+</div>
+</section>
+<section class="mb-8">
+<h2 class="px-4 pb-3 pt-5 text-2xl font-bold tracking-tight text-black dark:text-white">Títulos</h2>
+<div class="space-y-3">
+<div class="flex items-center gap-4 rounded-lg bg-primary/10 p-4 dark:bg-primary/20">
+<span class="material-symbols-outlined text-3xl text-primary">campaign</span>
+<div>
+<p class="font-bold text-black dark:text-white">El que más habla en el gym</p>
+<p class="text-sm text-black/70 dark:text-white/70">Otorgado a: Javi</p>
+</div>
+</div>
+<div class="flex items-center gap-4 rounded-lg bg-primary/10 p-4 dark:bg-primary/20">
+<span class="material-symbols-outlined text-3xl text-primary">sentiment_satisfied</span>
+<div>
+<p class="font-bold text-black dark:text-white">El más amistoso</p>
+<p class="text-sm text-black/70 dark:text-white/70">Otorgado a: Carlos</p>
+</div>
+</div>
+<div class="flex items-center gap-4 rounded-lg bg-primary/10 p-4 dark:bg-primary/20">
+<span class="material-symbols-outlined text-3xl text-primary">paid</span>
+<div>
+<p class="font-bold text-black dark:text-white">El que más apuesta en póker</p>
+<p class="text-sm text-black/70 dark:text-white/70">Otorgado a: Alex</p>
+</div>
+</div>
+<div class="flex items-center gap-4 rounded-lg bg-primary/10 p-4 dark:bg-primary/20">
+<span class="material-symbols-outlined text-3xl text-primary">attach_money</span>
+<div>
+<p class="font-bold text-black dark:text-white">El millonario</p>
+<p class="text-sm text-black/70 dark:text-white/70">Otorgado a: David</p>
+</div>
+</div>
+<div class="flex items-center gap-4 rounded-lg bg-primary/10 p-4 dark:bg-primary/20">
+<span class="material-symbols-outlined text-3xl text-primary">style</span>
+<div>
+<p class="font-bold text-black dark:text-white">El que tiene mejores manos</p>
+<p class="text-sm text-black/70 dark:text-white/70">Otorgado a: Sergio</p>
+</div>
+</div>
+</div>
+</section>
+<section>
+<h2 class="px-4 pb-3 pt-5 text-2xl font-bold tracking-tight text-black dark:text-white">Noticias y Eventos</h2>
+<div class="relative flex min-h-[200px] flex-col justify-end overflow-hidden rounded-lg bg-cover bg-center" style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuBQxu9ef4GhomAH_00rB7FxmPHhCVgZ_ii8fOvHfzxt4-s61yrUsHEJKujGc8DNZ7_nvzPgwd92sY0SH-HArWEo9wuCD6-ydefDT-oJgEeVL1WZsEWR77W5_iqP7_pGzJ_457l9XrM6ihhY77X977TlQATy2F3XCukQ17mQKGYRrpnLn4kQhUH1Dw4EDY10uh4eDCwMgCHAOqcedOdujHMqZYT9AV1Vc9UM3L9nnLEhqbxKZVWk4DMPSDE6ylF0OMt-9SzT13oKFY0m");'>
+<div class="flex w-full flex-col gap-1 p-4 text-white">
+<p class="text-lg font-bold tracking-tight">Próxima salida: ¡Noche de Poker!</p>
+<p class="text-sm font-medium">Este viernes en casa de Alex. ¡No faltes!</p>
+</div>
+</div>
+<div class="mt-4 space-y-3">
+<div class="rounded-lg bg-primary/10 p-4 dark:bg-primary/20">
+<p class="font-bold text-black dark:text-white">Boda de Laura y Miguel</p>
+<p class="text-sm text-black/70 dark:text-white/70">El próximo mes. ¡Preparen los trajes!</p>
+</div>
+<div class="rounded-lg bg-primary/10 p-4 dark:bg-primary/20">
+<p class="font-bold text-black dark:text-white">¡Nueva relación!</p>
+<p class="text-sm text-black/70 dark:text-white/70">Ana y Pedro han empezado a salir. ¡Felicidades!</p>
+</div>
+</div>
+</section>
+</main>
+</div>
+
+</body></html>
