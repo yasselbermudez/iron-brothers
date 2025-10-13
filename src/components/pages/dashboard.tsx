@@ -146,10 +146,12 @@ const Dashboard = () => {
         {/* News and Events Section */}
         <section>
           <h2 className="px-4 pb-3 pt-5 text-2xl font-bold tracking-tight text-white">
-            Noticias y Eventos
+            Noticias
           </h2>
+
+          {/* Noticia 1 */}
           <div
-            className="relative flex min-h-[200px] flex-col justify-end overflow-hidden rounded-lg bg-cover bg-center"
+            className="my-4 relative flex min-h-[200px] flex-col justify-end overflow-hidden rounded-lg bg-cover bg-center"
             style={{
               backgroundImage: `linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%), url("https://images.unsplash.com/photo-1541278107931-e006523892df?w=800")`
             }}
@@ -163,6 +165,62 @@ const Dashboard = () => {
               </p>
             </div>
           </div>
+
+          {/* Noticia 2 */}
+          <div
+            className="my-4 relative flex min-h-[200px] flex-col justify-end overflow-hidden rounded-lg bg-cover bg-center"
+            style={{
+              backgroundImage: `linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%), url("./assets/ronnie.jpg")`
+            }}
+          >
+            <div className="flex w-full flex-col gap-1 p-4 text-white">
+              <p className="text-lg font-bold tracking-tight">
+                The King
+              </p>
+              <p className="text-sm font-medium">
+                Yeah buddy!! Light weight baby!! 
+              </p>
+            </div>
+          </div>
+
+          {/* Noticia 3 */}
+          <div
+            className="my-4 relative flex min-h-[200px] flex-col justify-end overflow-hidden rounded-lg bg-cover bg-center"
+            style={{
+              backgroundImage: `linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%), url("./assets/ipvce.jpeg")`
+            }}
+          >
+            <div className="flex w-full flex-col gap-1 p-4 text-white">
+              <p className="text-lg font-bold tracking-tight">
+                IPVCE
+              </p>
+              <p className="text-sm font-medium">
+                Somos de la estirpe IPVCEANA 
+              </p>
+            </div>
+          </div>
+
+          {/* Noticia 4 */}
+          <div
+            className="my-4 relative flex min-h-[200px] flex-col justify-end overflow-hidden rounded-lg bg-cover bg-center"
+            style={{
+              backgroundImage: `linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%), url("./assets/ramon.jpg")`
+            }}
+          >
+            <div className="flex w-full flex-col gap-1 p-4 text-white">
+              <p className="text-lg font-bold tracking-tight">
+                Ramon Dino
+              </p>
+              <p className="text-sm font-medium">
+                Tenemos Campeon Mr Olympia 2025 
+              </p>
+            </div>
+          </div>
+          
+          <h2 className="px-4 pb-3 pt-5 text-2xl font-bold tracking-tight text-white">
+            Eventos
+          </h2>
+
           <div className="mt-4 space-y-3">
             {news.map((item, index) => (
               <div
