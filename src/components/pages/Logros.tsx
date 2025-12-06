@@ -1,0 +1,172 @@
+import { useState, useEffect } from 'react';
+import { Trophy/*, Star, Zap, Award */} from 'lucide-react';
+import apiService from '../../services/api.service';
+import { type LogroGalery } from '../../services/api.interfaces';
+
+export default function AllLogros() {
+  const [logros, setLogros] = useState<LogroGalery[]>([]);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchLogros();
+  }, []);
+
+  const fetchLogros = async () => {
+    try {
+      const response = await apiService.getAllLogros();
+      setLogros(response);
+    } catch (error) {
+      console.error('Error fetching logros:', error);
+    }
+  };
+
+  const getNivelColor = (nivel: string) => {
+    switch (nivel) {
+      case "1": return 'from-amber-600 to-orange-700';
+      case "2": return 'from-purple-600 to-fuchsia-700';
+      case "3": return 'from-cyan-600 to-blue-700';
+      default: return 'from-gray-600 to-red-700';
+    }
+  };
+
+  const getNivelBorder = (nivel: string) => {
+    switch (nivel) {
+      case "1": return 'border-amber-500/30';
+      case "2": return 'border-purple-500/30';
+      case "3": return 'border-cyan-500/30';
+      default: return 'border-red-500/30';
+    }
+  };
+
+  const getNivelGlow = (nivel: string) => {
+    switch (nivel) {
+      case "1": return 'shadow-amber-500/20';
+      case "2": return 'shadow-purple-500/20';
+      case "3": return 'shadow-cyan-500/20';
+      default: return 'shadow-red-500/20';
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-black p-6">
+      {/* Header compacto */}
+      <div className="max-w-7xl mx-auto mb-8">
+        <div className="flex items-center gap-4">
+          <Trophy className="w-12 h-12 text-yellow-500" />
+          <div>
+            <h1 className="text-4xl font-bold text-white mb-1">
+              Logros Épicos
+            </h1>
+            <p className="text-gray-500">
+              {logros.length} logros disponibles
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Grid compacto de logros */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {logros.map((achievement) => (
+          <div
+            key={achievement.id}
+            className={`relative group transition-all duration-300 ${
+              hoveredId === achievement.id ? 'scale-105 z-10' : ''
+            }`}
+            onMouseEnter={() => setHoveredId(achievement.id)}
+            onMouseLeave={() => setHoveredId(null)}
+          >
+            {/* Card cuadrada más oscura */}
+            <div className={`relative bg-gradient-to-br from-gray-950 to-black rounded-xl overflow-hidden border ${
+              hoveredId === achievement.id
+                ? `border-opacity-100 ${getNivelBorder(achievement.nivel).replace('/30', '/60')} shadow-2xl ${getNivelGlow(achievement.nivel).replace('/20', '/40')}`
+                : `${getNivelBorder(achievement.nivel)} shadow-lg ${getNivelGlow(achievement.nivel)}`
+            } transition-all duration-300`}>
+
+              {/* Borde superior de color */}
+              <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${getNivelColor(achievement.nivel)} ${
+                hoveredId === achievement.id ? 'opacity-100' : 'opacity-60'
+              }`}></div>
+
+              {/* Contenido */}
+              <div className="p-5">
+                {/* Icono y badge de nivel */}
+                <div className="flex items-start justify-between mb-3">
+                  
+                  <img
+                      src={achievement.pegatina}
+                      alt={achievement.nombre}
+                      className="w-22 h-22 "
+                    />
+
+                  
+                </div>
+
+                {/* Título */}
+                <h3 className={`text-lg font-bold mb-2 ${
+                  hoveredId === achievement.id
+                    ? 'bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent'
+                    : 'text-white'
+                } transition-all duration-300`}>
+                  {achievement.nombre}
+                </h3>
+
+                {/* Descripción */}
+                <p className="text-gray-400 text-xs mb-3 leading-relaxed min-h-[2.5rem]">
+                  {achievement.descripcion}
+                </p>
+
+                {/* Separador */}
+                <div className="h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent mb-3"></div>
+
+                {/* Misión asociada */}
+                <div className="space-y-3">
+                  <div className={`px-3 py-1 bg-gradient-to-br ${getNivelColor(achievement.nivel)} rounded-full text-white font-bold text-xs shadow-lg`}>
+                    Nivel {achievement.nivel}
+                  </div>
+                </div>
+              </div>
+
+              {/* Efecto de brillo al hover */}
+              <div className={`absolute inset-0 bg-gradient-to-r ${getNivelColor(achievement.nivel)} opacity-0 ${
+                hoveredId === achievement.id ? 'opacity-5' : ''
+              } transition-opacity duration-300 pointer-events-none`}></div>
+
+              {/* Brillo en las esquinas al hover */}
+              {hoveredId === achievement.id && (
+                <>
+                  <div className={`absolute top-0 left-0 w-20 h-20 bg-gradient-to-br ${getNivelColor(achievement.nivel)} opacity-20 blur-xl`}></div>
+                  <div className={`absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-tl ${getNivelColor(achievement.nivel)} opacity-20 blur-xl`}></div>
+                </>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Footer con estadísticas */}
+      {/*
+      <div className="max-w-7xl mx-auto mt-8 grid grid-cols-3 gap-4">
+        <div className="bg-gradient-to-br from-gray-950 to-black border border-amber-500/20 rounded-lg p-4 text-center">
+          <p className="text-2xl font-bold text-amber-400">
+            {logros.filter(a => a.nivel === "1").length}
+          </p>
+          <p className="text-xs text-gray-500 uppercase tracking-wider">Nivel 1</p>
+        </div>
+        <div className="bg-gradient-to-br from-gray-950 to-black border border-purple-500/20 rounded-lg p-4 text-center">
+          <p className="text-2xl font-bold text-purple-400">
+            {logros.filter(a => a.nivel === "2").length}
+          </p>
+          <p className="text-xs text-gray-500 uppercase tracking-wider">Nivel 2</p>
+        </div>
+        <div className="bg-gradient-to-br from-gray-950 to-black border border-cyan-500/20 rounded-lg p-4 text-center">
+          <p className="text-2xl font-bold text-cyan-400">
+            {logros.filter(a => a.nivel === "3").length}
+          </p>
+          <p className="text-xs text-gray-500 uppercase tracking-wider">Nivel 3</p>
+        </div>
+      </div>
+      */}
+      
+    </div>
+  );
+}
