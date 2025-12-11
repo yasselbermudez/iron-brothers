@@ -5,7 +5,6 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Dumbbell, Sword } from 'lucide-react';
 import { useAuth } from '../../AuthContext/auth-hooks';
 
 interface UserData{
@@ -65,24 +64,30 @@ const AuthForms = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-slate-950">
-      
-      {/* style={{ backgroundImage: `url('ruta/a/tu/imagen.png')` }}  mas control sobre la imagen de fondo*/}
-      <div
-        className="w-full max-w-md bg-cover bg-center bg-no-repeat rounded-xl"
-        style={{ 
-          backgroundImage: `linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(255,255,255,0.9)), url('./assets/ronnie_photo.jpg')`,
-        }}
+  <div className="min-h-screen flex items-center justify-center p-4 bg-slate-950">
+    <div
+      className="w-full max-w-md bg-cover bg-center bg-no-repeat rounded-xl"
+      style={{ 
+       backgroundImage: `linear-gradient(to bottom, rgba(1, 8, 45, 0.7), rgba(1, 8, 45,0.8)), url('./assets/brothers.jpg')`,
+      }}
+    >
+      <Card 
+        className={
+          isLogin
+          ?"w-full max-w-md relative z-10 border-slate-800"
+          :"w-full max-w-md relative z-10 backdrop-blur-sm border-slate-800"
+        }
       >
-
-      <Card className="w-full max-w-md relative z-10">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center mb-4">
-            <Dumbbell className="h-10 w-10 text-red-600 mr-2" />
-            <h1 className="text-3xl font-bold text-gray-900">Look at the Aesthetics</h1>
-            <Sword className="h-10 w-10 text-red-600 mr-2" />
+            <img 
+              src="/icon4.png" 
+              alt="Iron Brothers Logo" 
+              className="h-8 w-8 mr-2 object-contain"
+            />
+            <h1 className="text-4xl font-bold text-white">Iron Brothers</h1>
           </div>
-          <CardTitle className="text-xl">
+          <CardTitle className="text-xl text-white">
             {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}
           </CardTitle>
         </CardHeader>
@@ -90,20 +95,21 @@ const AuthForms = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Nombre completo
+                <label className="block text-sm font-medium text-slate-300 mb-1">
+                  Nombre
                 </label>
                 <Input
                   type="text"
                   value={formData.name}
                   onChange={(e) => handleChange('name', e.target.value)}
                   required
+                  className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-400 focus:ring-red-500 focus:border-red-500"
                 />
               </div>
             )}
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-slate-300 mb-1">
                 Email
               </label>
               <Input
@@ -111,11 +117,12 @@ const AuthForms = () => {
                 value={formData.email}
                 onChange={(e) => handleChange('email', e.target.value)}
                 required
+                className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-400 focus:ring-red-500 focus:border-red-500"
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-slate-300 mb-1">
                 Contraseña
               </label>
               <Input
@@ -123,30 +130,35 @@ const AuthForms = () => {
                 value={formData.password}
                 onChange={(e) => handleChange('password', e.target.value)}
                 required
+                className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-400 focus:ring-red-500 focus:border-red-500"
               />
             </div>
             
             {!isLogin && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-slate-300 mb-1">
                   Tipo de usuario
                 </label>
                 <Select 
                   value={formData.role} 
                   onValueChange={(value) => handleChange('role', value)}
                 >
-                  <SelectTrigger >
-                    <SelectValue />
+                  <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
+                    <SelectValue placeholder="Selecciona un tipo" />
                   </SelectTrigger>
-                  <SelectContent className='bg-white'>
-                    <SelectItem value="jugador">Jugador</SelectItem>
-                    <SelectItem value="espectador">Espectador</SelectItem>
+                  <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                    <SelectItem value="jugador" className="focus:bg-slate-700 focus:text-white">Jugador</SelectItem>
+                    <SelectItem value="espectador" className="focus:bg-slate-700 focus:text-white">Espectador</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             )}
             
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button 
+              type="submit" 
+              className="w-full bg-blue-950 hover:bg-slate-700 text-white font-medium rounded-xl"
+              disabled={loading}
+            >
               {loading 
                 ? 'Procesando...' 
                 : isLogin 
@@ -160,19 +172,19 @@ const AuthForms = () => {
             <button
               type="button"
               onClick={() => setIsLogin(!isLogin)}
-              className="text-red-600 hover:text-red-700 text-sm"
+              className="text-red-400 hover:text-red-300 text-sm transition-colors"
             >
               {isLogin 
-                ? '¿No tienes cuenta? Acaso eres gay? create una nueva' 
-                : '¿Ya tienes cuenta? Eres un tanque! inicia sesión'
+                ? '¿No tienes cuenta? Crear una' 
+                : '¿Ya tienes cuenta? Inicia sesión'
               }
             </button>
           </div>
         </CardContent>
       </Card>
-      </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default AuthForms;

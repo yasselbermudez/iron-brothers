@@ -1,6 +1,6 @@
 import { useAuth } from '../../AuthContext/auth-hooks';
 import { useEffect, useState } from 'react';
-import { Dumbbell, LogOut, User, Menu, Home, Activity, Club, Target, UsersRound , Settings2 } from 'lucide-react';
+import {LogOut, User, Menu, Home, Activity, Club, Target, UsersRound , Settings2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
@@ -40,7 +40,6 @@ const Header = () => {
     { path: '/poker', label: 'Poker', icon: Club },
     { path: '/galery', label: 'Galery', icon: Target },
     { path: '/consejo', label: 'Consejo', icon: UsersRound },
-    { path: '/ayuda', label: 'ayuda', icon: UsersRound },
   ];
 
   const handleGroup = async () => {
@@ -121,7 +120,6 @@ const Header = () => {
               >
                 <SheetHeader className="border-b border-slate-700 pb-4">
                   <SheetTitle className="text-white flex items-center space-x-2">
-                    <Dumbbell className="h-6 w-6 text-red-500" />
                     <span>Navegación</span>
                   </SheetTitle>
                 </SheetHeader>
@@ -151,9 +149,13 @@ const Header = () => {
 
             {/* Logo */}
             <div className="flex items-center space-x-2">
-              <Dumbbell className="h-8 w-8 text-red-500" />
+              <img 
+                src="/icon.png" 
+                alt="Iron Brothers Logo" 
+                className="h-6 w-6 mr-1 object-contain"
+              />
               <h1 className="text-xl font-bold text-white bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
-                Look at the Aesthetics
+                Iron Brothers
               </h1>
             </div>
           </div>

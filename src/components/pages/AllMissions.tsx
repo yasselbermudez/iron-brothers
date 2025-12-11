@@ -55,18 +55,17 @@ const MisionesGame = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black p-4 md:p-8">
+    <div className="min-h-screen bg-slate-900/50 border border-slate-700 rounded-xl p-4">
       <div className="max-w-7xl mx-auto">
-        {/* Header épico */}
+
         <div className="text-center mb-12 relative">
           <div className="absolute inset-0 bg-gradient-to-r from-orange-600 via-red-600 to-purple-600 opacity-20 blur-3xl"></div>
-          <h1 className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-red-500 to-purple-500 mb-4 relative z-10 tracking-tight">
-            MISIONES PRINCIPALES
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-red-500 to-purple-500 mb-4 relative z-10 tracking-tight">
+            Misiones Principales
           </h1>
-          <p className="text-gray-400 text-xl relative z-10 font-medium">Conquista tu destino. Forja tu leyenda.</p>
+          <p className="text-white text-xl relative z-10 font-medium">Informacion sobre todas las misiones principales</p>
         </div>
 
-        {/* Grid de niveles */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {niveles.map((nivel) => (
             <div key={nivel.nivel.numeroNivel} className="relative group">

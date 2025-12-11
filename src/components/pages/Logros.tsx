@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Trophy/*, Star, Zap, Award */} from 'lucide-react';
 import apiService from '../../services/api.service';
 import { type LogroGalery } from '../../services/api.interfaces';
 
@@ -48,20 +47,14 @@ export default function AllLogros() {
   };
 
   return (
-    <div className="min-h-screen bg-black p-6">
-      {/* Header compacto */}
-      <div className="max-w-7xl mx-auto mb-8">
-        <div className="flex items-center gap-4">
-          <Trophy className="w-12 h-12 text-yellow-500" />
-          <div>
-            <h1 className="text-4xl font-bold text-white mb-1">
-              Logros Épicos
-            </h1>
-            <p className="text-gray-500">
-              {logros.length} logros disponibles
-            </p>
-          </div>
-        </div>
+    <div className="min-h-screen bg-slate-900/50 border border-slate-700 rounded-xl p-4">
+     
+      <div className="text-center mb-12 relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-600 via-red-600 to-purple-600 opacity-20 blur-3xl"></div>
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-red-500 to-purple-500 mb-4 relative z-10 tracking-tight">
+          Logros Epicos
+        </h1>
+        <p className="text-white text-xl relative z-10 font-medium">Informacion sobre todas los logros</p>
       </div>
 
       {/* Grid compacto de logros */}

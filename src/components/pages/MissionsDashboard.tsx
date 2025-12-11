@@ -220,11 +220,10 @@ const MissionsDashboard = ({userId}:{userId:string}) => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 p-6">
+    <div className="min-h-screen bg-slate-900/50 border border-slate-700 rounded-xl p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Panel de Misiones</h1>
-          <p className="text-lg text-slate-400">Bienvenido, <span className="font-semibold text-slate-200">{data.person_name}</span></p>
+          <h1 className="text-3xl font-bold mb-8 text-white text-center">Panel de Misiones</h1>
 
           {canGenerateSecondaryMission() && (
           <button
