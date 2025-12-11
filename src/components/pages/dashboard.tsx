@@ -54,7 +54,7 @@ const Dashboard = () => {
         {/* Hero Section */}
         <div className="mb-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white">
-            Mira la Estetica
+            Iron Brothers
           </h1>
           <p className="mt-2 text-base text-white/70">
             Un blog mejorado para seguir y documentar nuestros progresos en el gym ,en el poker y en el dia a dia

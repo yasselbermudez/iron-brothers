@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { User, Weight, TrendingUp, Edit2, X, Save } from 'lucide-react';
+import { User, TrendingUp, Edit2, X, Save } from 'lucide-react';
 
 import apiService from '../../services/api.service';
 import type { GymProfile, Pesos } from '../../services/api.interfaces';
@@ -122,12 +122,11 @@ export const MyGymProfile: React.FC<Props> = ({ userId }) => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 p-6">
+    <div className="min-h-screen bg-slate-900/50 border border-slate-700 rounded-xl p-2">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2 flex items-center justify-center">
-            <Weight className="inline-block mr-3" size={36} />
+        
+        <div className="text-center my-4">
+          <h1 className="text-4xl font-bold text-white mt-4">
             Mi Perfil del Gym
           </h1>
           <p className="text-slate-400">Gestiona y actualiza tu información de entrenamiento</p>

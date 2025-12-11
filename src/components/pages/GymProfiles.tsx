@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { User, Weight, TrendingUp } from 'lucide-react';
+import { User, TrendingUp } from 'lucide-react';
 import type { GymProfile } from '../../services/api.interfaces';
 import apiService from '../../services/api.service';
 
@@ -30,12 +30,15 @@ export const GymProfileCards: React.FC<Props> = ({groupId}) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 p-6">
+    <div className="min-h-screen bg-gray-900/50 border border-slate-700 rounded-xl p-1 p-2">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold text-white mb-8 text-center">
-          <Weight className="inline-block mr-3 mb-1" size={36} />
-          Perfiles del Gym
-        </h1>
+        <div className="text-center my-4">
+          <h1 className="text-4xl font-bold text-white mt-4 text-center">
+            Perfiles del Grupo
+          </h1>
+          <p className="text-slate-400">Obten información de tus compañeros</p>
+        </div>
+        
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {!profiles && !groupId && (
@@ -51,7 +54,7 @@ export const GymProfileCards: React.FC<Props> = ({groupId}) => {
             return (
               <div
                 key={profile.id}
-                className={`bg-gray-800 rounded-lg overflow-hidden shadow-lg transition-all duration-300 ${
+                className={`bg-gray-800 rounded-xl overflow-hidden shadow-lg transition-all duration-300 ${
                   isExpanded ? 'md:col-span-2 lg:col-span-3' : ''
                 }`}
               >

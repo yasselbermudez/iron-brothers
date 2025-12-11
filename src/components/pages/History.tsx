@@ -54,7 +54,7 @@ const MissionHistory = ({userId}:{userId:string}) => {
   );
 
   return (
-    <div className="bg-slate-950 text-white min-h-screen p-6">
+    <div className="bg-slate-900/50 text-white min-h-screen border border-slate-700 rounded-xl p-6">
       <h1 className="text-3xl font-bold mb-8 text-center">Historial de Progreso</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
