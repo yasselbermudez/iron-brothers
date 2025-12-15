@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './AuthContext/AuthContext';
-import AuthForms from './components/pages/AuthForm';
-import Layout from './components/pages/Layout';
-import ProtectedRoute from './components/pages/ProtectedRoute';
+import AuthForms from './components/AuthForm';
+import Layout from './components/Layout';
+import ProtectedRoute from './components/ProtectedRoute';
 
 import Dashboard from './components/pages/Dashboard';
 import PokerRanking from './components/pages/Poker';

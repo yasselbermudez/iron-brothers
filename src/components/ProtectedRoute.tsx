@@ -1,6 +1,5 @@
-// components/ProtectedRoute.jsx
 import type { ReactNode } from 'react';
-import { useAuth } from '../../AuthContext/auth-hooks';
+import { useAuth } from '../AuthContext/auth-hooks';
 import { Navigate, useLocation } from 'react-router-dom';
 
 export interface AuthProviderProps {

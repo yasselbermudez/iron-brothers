@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { useAuth } from '../../AuthContext/auth-hooks';
-import MissionsDashboard from "./MissionsDashboard";
+import MissionsDashboard from "../MissionsDashboard";
 import MissionHistory from "./History";
 
 function Missions() {

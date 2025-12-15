@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import {GymProfileCards} from './GymProfiles';
+import {GymProfileCards} from '../GymProfiles';
 import { useAuth } from '../../AuthContext/auth-hooks';
-import {MyGymProfile} from "./MyGymProfile";
+import {MyGymProfile} from "../MyGymProfile";
 
 function Gym() {
   const { user, loading } = useAuth();

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { User, TrendingUp } from 'lucide-react';
-import type { GymProfile } from '../../services/api.interfaces';
-import apiService from '../../services/api.service';
+import type { GymProfile } from '../services/api.interfaces';
+import apiService from '../services/api.service';
 
 interface Props {
   groupId: string|undefined

@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Search, Users, Lock, ChevronDown, ChevronUp } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import type { Group, MemberUpdate } from '../../services/api.interfaces';
-import apiService from '../../services/api.service';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import type { Group, MemberUpdate } from '../services/api.interfaces';
+import apiService from '../services/api.service';
 
 interface GroupSearchDialogProps {
   open: boolean;

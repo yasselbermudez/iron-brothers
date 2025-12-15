@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "../ui/button";
+import { Button } from "./ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,12 +8,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+} from "./ui/dialog";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 import { Plus } from "lucide-react";
-import apiService from "../../services/api.service";
-import type { CreateGroup } from "../../services/api.interfaces";
+import apiService from "../services/api.service";
+import type { CreateGroup } from "../services/api.interfaces";
 
 interface Props {
   open: boolean;

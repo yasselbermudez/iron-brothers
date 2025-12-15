@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import apiService from '../../services/api.service';
-import { type LogroGalery } from '../../services/api.interfaces';
+import apiService from '../services/api.service';
+import { type LogroGalery } from '../services/api.interfaces';
 
 export default function AllLogros() {
   const [logros, setLogros] = useState<LogroGalery[]>([]);

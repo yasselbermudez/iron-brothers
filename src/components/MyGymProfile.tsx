@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { User, TrendingUp, Edit2, X, Save } from 'lucide-react';
 
-import apiService from '../../services/api.service';
-import type { GymProfile, Pesos } from '../../services/api.interfaces';
+import apiService from '../services/api.service';
+import type { GymProfile, Pesos } from '../services/api.interfaces';
 
 interface Props {
   userId: string;

@@ -1,14 +1,14 @@
-import { useAuth } from '../../AuthContext/auth-hooks';
+import { useAuth } from '../AuthContext/auth-hooks';
 import { useEffect, useState } from 'react';
 import {LogOut, User, Menu, Home, Activity, Club, Target, UsersRound , Settings2 } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
-import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
+import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
 import { useNavigate, useLocation } from 'react-router-dom';
-import apiService from "../../services/api.service";
+import apiService from "../services/api.service";
 import GroupSearchDialog from './GroupSearch';
-import type { MemberUpdate } from '../../services/api.interfaces';
+import type { MemberUpdate } from '../services/api.interfaces';
 import CrearGrupoDialog from './CreateGroup';
 
 const Header = () => {
