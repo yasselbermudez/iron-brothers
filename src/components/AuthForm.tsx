@@ -1,11 +1,10 @@
-// AuthForms.jsx
 import { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
+import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { useAuth } from '../../AuthContext/auth-hooks';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { useAuth } from '../AuthContext/auth-hooks';
 
 interface UserData{
   email: string,
@@ -81,7 +80,7 @@ const AuthForms = () => {
         <CardHeader className="text-center">
           <div className="flex items-center justify-center mb-4">
             <img 
-              src="/icon4.png" 
+              src="/icon.png" 
               alt="Iron Brothers Logo" 
               className="h-8 w-8 mr-2 object-contain"
             />

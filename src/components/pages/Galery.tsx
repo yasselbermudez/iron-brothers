@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { useAuth } from '../../AuthContext/auth-hooks';
-import MisionesGame from "./AllMissions";
-import AllLogros from "./Logros";
+import MisionesGame from "../AllMissions";
+import AllLogros from "../Logros";
 
 function Galery() {
   const { user, loading } = useAuth();

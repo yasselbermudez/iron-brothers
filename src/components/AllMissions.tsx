@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ChevronDown, ChevronUp, Trophy, Zap, Star, Flame, X } from 'lucide-react';
-import apiService from "../../services/api.service"
-import type {Mission,Nivel,Logro} from "../../services/api.interfaces"
+import apiService from "../services/api.service"
+import type {Mission,Nivel,Logro} from "../services/api.interfaces"
 
 interface MisionesPorNivel {
   [key: number]: {

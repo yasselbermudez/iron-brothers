@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { X, ThumbsUp, ThumbsDown, Users, CheckCircle } from 'lucide-react';
-import apiService from '../../services/api.service';
-import type { Assignment, UpdateMissionsParamsVote } from '../../services/api.interfaces';
-import { MissionType } from '../../services/api.interfaces';
+import apiService from '../services/api.service';
+import type { Assignment, UpdateMissionsParamsVote } from '../services/api.interfaces';
+import { MissionType } from '../services/api.interfaces';
 interface Props{
   isOpen:boolean,
   onClose: ()=>void

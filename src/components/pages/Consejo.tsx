@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import MissionReviewModal from './MissionReview';
+import MissionReviewModal from '../MissionReview';
 import { useAuth } from '../../AuthContext/auth-hooks';
 import apiService from '../../services/api.service';
 import type { Group } from '../../services/api.interfaces';

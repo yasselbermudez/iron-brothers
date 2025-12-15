@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { CheckCircle, Clock, AlertCircle, Plus, Loader2 } from 'lucide-react';
-import type {Assignment, UpdateMissionsParams} from "../../services/api.interfaces"
-import apiService from "../../services/api.service"
-import type{ MissionAssignment} from "../../services/api.interfaces"
-import  {MissionStatus,MissionType,type AssignmentMissionResponse} from "../../services/api.interfaces"
-import { Button } from "../ui/button";
-import MissionDialog from "../mission/MissionDialog"
+import type {Assignment, UpdateMissionsParams} from "../services/api.interfaces"
+import apiService from "../services/api.service"
+import type{ MissionAssignment} from "../services/api.interfaces"
+import  {MissionStatus,MissionType,type AssignmentMissionResponse} from "../services/api.interfaces"
+import { Button } from "./ui/button";
+import MissionDialog from "./mission/MissionDialog"
 
 const MissionsDashboard = ({userId}:{userId:string}) => {
   const [data, setData] = useState<Assignment|null>(null);
