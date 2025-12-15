@@ -1,9 +1,7 @@
 import axios, { type AxiosResponse, AxiosError } from 'axios';
 import type {LogroGalery,Mission, GymProfile,Assignment, User, MissionCreated, EventResponse, Updateuser, Group, MemberUpdate, CreateGroup, UpdateMissionsParams, UpdateMissionsParamsVote, GymProfileUpdate, AssignmentMissionResponse, MissionType, EventHistory} from "./api.interfaces"
 
-// Configuración base de axios
-//const BACKEND_URL = process.env.APP_BACKEND_URL;
-const BACKEND_URL = "http://localhost:8000"
+const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
 const API_BASE_URL = `${BACKEND_URL}/api/v1`;
 
 // Instancia de axios configurada
