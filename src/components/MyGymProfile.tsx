@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { User, TrendingUp, Edit2, X, Save } from 'lucide-react';
 
 import apiService from '../services/api.service';
@@ -25,11 +25,7 @@ export const MyGymProfile: React.FC<Props> = ({ userId }) => {
   const [saveLoading, setSaveLoading] = useState(false);
   const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    fetchMyProfile();
-  }, []);
-
-  const fetchMyProfile = async (): Promise<void> => {
+  const fetchMyProfile = useCallback(async (): Promise<void> => {
     try {
       setLoading(true);
       const response = await apiService.getMyGymProfile(userId);
@@ -39,7 +35,11 @@ export const MyGymProfile: React.FC<Props> = ({ userId }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId]);
+
+  useEffect(() => {
+    fetchMyProfile();
+  }, [fetchMyProfile]);
 
   const startEditing = (): void => {
     if (profile) {

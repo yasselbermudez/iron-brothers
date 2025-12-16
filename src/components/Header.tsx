@@ -25,8 +25,14 @@ const Header = () => {
   const location = useLocation();
   
   useEffect(() => {
-    handleGroup();
-  }, []);
+    const fetchGroup = async () => {
+      if(user?.group_id){
+        const group = await apiService.getGroup(user.group_id);
+        setGroup({name: group.group_name, creator_id: group.creator_id});
+      }
+    };
+    fetchGroup();
+  }, [user?.group_id]);
 
   const isAdmin:boolean = group?.creator_id==user?.id
 
@@ -41,13 +47,6 @@ const Header = () => {
     { path: '/galery', label: 'Galery', icon: Target },
     { path: '/consejo', label: 'Consejo', icon: UsersRound },
   ];
-
-  const handleGroup = async () => {
-    if(user?.group_id){
-      const group = await apiService.getGroup(user?.group_id)
-      setGroup({name:group.group_name,creator_id:group.creator_id})
-    }
-  };
 
   const handleNavigation = (path:string) => {
     navigate(path);
@@ -66,15 +65,12 @@ const Header = () => {
   };
 
   const handleActivate = async () => {
-    
     if(user?.email==null || user.id==null) return
     await apiService.init_profile_gamer(user.email)
     await apiService.updateUser(user.id,{"is_active":true})
     await apiService.initAssignment()
-    console.log("llegamos al activate ")
     setOpenInitGamer(false)
     await refreshUser();
-    //navigate('/main');
   };
 
   const handleSalirGrupo = async () => {

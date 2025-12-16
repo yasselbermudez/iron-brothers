@@ -12,10 +12,7 @@ export const GymProfileCards: React.FC<Props> = ({groupId}) => {
   const [selectedId, setSelectedId] = useState<number|null>(null);
   
   useEffect(() => {
-      fetchProfiles()
-    }, []);
-
-  const fetchProfiles = async () => {
+    const fetchProfiles = async () => {
       try {
         if(!groupId) return
         const response = await apiService.getGymGroupProfiles(groupId);
@@ -23,7 +20,9 @@ export const GymProfileCards: React.FC<Props> = ({groupId}) => {
       } catch (error) {
         console.error('Error fetching gym profiles:', error);
       }
-  };
+    };
+    fetchProfiles()
+  }, [groupId]);
 
   const handleCardClick = (id:number) => {  
       setSelectedId(selectedId === id ? null : id);

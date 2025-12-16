@@ -35,14 +35,15 @@ const ConsejoEpico = () => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
-    fetchGroup()
-  }, []);
-
-  const fetchGroup = async () => {
+    const fetchGroup = async () => {
       if(!user?.group_id) return
       const response = await apiService.getGroup(user?.group_id)
       setGroup(response)
-  }
+    }
+    fetchGroup()
+  }, [user?.group_id]);
+
+  
 
   const enviarMensaje = () => {
     if (nuevoMensaje.trim() === "" || !user?.id || !user?.name) return;

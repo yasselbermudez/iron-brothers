@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { CheckCircle, Clock, AlertCircle, Plus, Loader2 } from 'lucide-react';
 import type {Assignment, UpdateMissionsParams} from "../services/api.interfaces"
 import apiService from "../services/api.service"
@@ -21,20 +21,20 @@ const MissionsDashboard = ({userId}:{userId:string}) => {
   //actualizando una mission
   const [isUpdating, setIsUpdating] = useState(false);
 
+  const fetchAssignment = useCallback(async () => {
+    try {
+      const response = await apiService.getAssignament(userId);
+      const missionsData = await apiService.getAssignamentAllMissions(userId)
+      setData(response)
+      setMissionsData(missionsData)
+    } catch (error) {
+      console.error('Error fetching assignament:', error);
+    }
+  },[userId])
+
   useEffect(() => {
     fetchAssignment();
-  }, []);
-
-  const fetchAssignment = async () => {
-        try {
-          const response = await apiService.getAssignament(userId);
-          const missionsData = await apiService.getAssignamentAllMissions(userId)
-          setData(response)
-          setMissionsData(missionsData)
-        } catch (error) {
-          console.error('Error fetching assignament:', error);
-        }
-      };
+  }, [fetchAssignment]);
 
   const getStatusConfig = (status:MissionStatus) => {
     const configs = {
