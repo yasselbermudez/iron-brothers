@@ -1,7 +1,6 @@
 import { useAuth } from '../AuthContext/auth-hooks';
 import { useEffect, useState } from 'react';
 import {LogOut, User, Menu, Home, Activity, Club, Target, UsersRound , Settings2 } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -10,12 +9,14 @@ import apiService from "../services/api.service";
 import GroupSearchDialog from './GroupSearch';
 import type { MemberUpdate } from '../services/api.interfaces';
 import CrearGrupoDialog from './CreateGroup';
+import { ProfileInitDialog } from './GymProfileInit';
 
 const Header = () => {
   const { user, logout, refreshUser } = useAuth();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
-  const [openInitGamer, setOpenInitGamer] = useState(false);
+  
+  const [openInitProfile, setOpenInitProfile] =  useState<boolean>(false);
   const [openSearchGroup, setOpenSearchGroup] = useState(false);
   const [openCreateGroup, setOpenCreateGroup] = useState(false);
 
@@ -62,15 +63,6 @@ const Header = () => {
   const handleChangeProfile = () => {
     setIsUserMenuOpen(false);
     navigate('/gym');
-  };
-
-  const handleActivate = async () => {
-    if(user?.email==null || user.id==null) return
-    await apiService.init_profile_gamer(user.email)
-    await apiService.updateUser(user.id,{"is_active":true})
-    await apiService.initAssignment()
-    setOpenInitGamer(false)
-    await refreshUser();
   };
 
   const handleSalirGrupo = async () => {
@@ -225,7 +217,7 @@ const Header = () => {
                   
                     {user?.role == "jugador" && !user?.is_active && (
                       <Button 
-                        onClick={() => setOpenInitGamer(true)} 
+                        onClick={() => setOpenInitProfile(true)} 
                         variant="outline" 
                         className="w-full bg-red-600/20 text-red-400 border-red-500/30 hover:bg-red-600/30 hover:text-red-300"
                       >
@@ -294,27 +286,14 @@ const Header = () => {
                     
                   </div>
                 </div>
-
-                {/* Diálogo para activar perfil de jugador */}
-                <div className="bg-slate-800">
-                  <Dialog open={openInitGamer} onOpenChange={setOpenInitGamer}>
-                      <DialogContent className="max-w-4xl max-h-[90vh] text-white overflow-y-auto bg-slate-900">
-                        <DialogHeader>
-                          <DialogTitle>Crear Rutina</DialogTitle>
-                        </DialogHeader>
-                          <h1>Formulario para activar perfil de jugador</h1>
-                          <p>temporalmente los datos ya estan guardados en un json en el servidor</p>
-                          <Button 
-                            onClick={handleActivate} 
-                            variant="outline" 
-                            className="w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
-                          >
-                            <Settings2 className="h-4 w-4 mr-2" />
-                            Activar perfil
-                          </Button>
-                      </DialogContent>
-                    </Dialog>
-                </div>
+                
+                {openInitProfile && 
+                  <ProfileInitDialog
+                    openInitProfile={openInitProfile}
+                    setOpenInitProfile={setOpenInitProfile}
+                    refreshUser={refreshUser}
+                  />
+                }
 
                 {openSearchGroup && 
                   <GroupSearchDialog

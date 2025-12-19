@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect} from 'react';
+import { createContext, useState, useEffect, useCallback} from 'react';
 import axios from 'axios';
 import apiService from "../services/api.service"
 import type {User,AuthProviderProps,AuthContextType} from "./types"
@@ -14,12 +14,7 @@ export const AuthProvider = ({ children }:AuthProviderProps) => {
   // Ensure axios sends cookies (for HttpOnly cookie-based auth)
   axios.defaults.withCredentials = true;
 
-  useEffect(() => {
-    // On mount, try to fetch current user; the browser will send the cookie automatically
-    fetchUser();
-  },[]);
-
-   const fetchUser = async () => {
+  const fetchUser = useCallback( async () => {
     try {
       const response = await apiService.getCurrentUser()
       setUser(response);
@@ -29,6 +24,34 @@ export const AuthProvider = ({ children }:AuthProviderProps) => {
     } finally {
       setLoading(false);
     }
+  },[])
+
+  useEffect(() => {
+    // On mount, try to fetch current user; the browser will send the cookie automatically
+    fetchUser();
+  },[fetchUser]);
+
+  const extractErrorMessage = (error: unknown): string => {
+    if (axios.isAxiosError(error)) {
+      const status = error.response?.status;
+      const serverMessage = error.response?.data?.detail || error.response?.data?.message;
+      console.error("Server Error Message: ",serverMessage)
+      switch (status) {
+        case 400:
+          return "Datos inválidos. Verifica el formato de tu email.";
+        case 401:
+          return "Email o contraseña incorrectos. Por favor, inténtalo de nuevo.";
+        case 404:
+          return "Usuario no encontrado. Verifica tu email o regístrate.";
+        case 409:
+          return "Este email ya está registrado. Inicia sesión o usa otro email.";
+        case 422:
+          return "Datos de entrada inválidos. Verifica todos los campos.";
+        default:
+          return "Error en el servidor. Inténtalo más tarde.";
+      }
+    }
+    return "Error de conexión. Verifica tu internet.";
   };
 
   const refreshUser = async () => {
@@ -54,10 +77,16 @@ export const AuthProvider = ({ children }:AuthProviderProps) => {
         } else {
           await fetchUser();
         }
-        return true;
+        return {
+          success:true,
+          message:"Inicio de sesión exitoso"
+        };
       } catch (error) {
-        console.error('Register error in login retornamos false:', error);
-        return false;
+        const errorMessage = extractErrorMessage(error)
+        return {
+          success:false,
+          message:errorMessage
+        };
       }
       
   };
@@ -72,10 +101,16 @@ export const AuthProvider = ({ children }:AuthProviderProps) => {
       } else {
         await fetchUser();
       }
-      return true;
+      return {
+        success:true,
+        message:"Registro exitoso"
+      };
     } catch (error) {
-      console.error('Register error:', error);
-      return false;
+      const errorMessage = extractErrorMessage(error)
+      return {
+        success:false,
+        message:errorMessage
+      };
     }
   };
 

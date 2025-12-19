@@ -69,11 +69,6 @@ export interface UserProfile {
   role: string;
 }
 
-interface Deuda{
-    tipo: string
-    cantidad: string
-}
-
 export interface Pesos{
     pressBanca: string
     sentadilla: string
@@ -91,9 +86,8 @@ export interface GymProfile {
     apodo: string;
     titulo: string;
     peso_corporal: string;
-    altura: string;
+    estatura: string;
     aura: string;
-    deuda: Deuda;
     pesos: Pesos;
     mujeres: string;
     frase: string;
@@ -102,13 +96,23 @@ export interface GymProfile {
 }
 
 export interface GymProfileUpdate{
-  aura?:string
   apodo?: string
   peso_corporal?: string
   pesos?: Partial<Pesos> 
   mujeres?: string 
   frase?: string
   objetivo?: string
+}
+
+export interface GymProfileInit{
+    edad: string
+    peso_corporal: string
+    estatura: string
+    pesos: Pesos
+    frase?: string
+    apodo?: string
+    objetivo?: string
+    summary?: string
 }
 
 //asignaciones

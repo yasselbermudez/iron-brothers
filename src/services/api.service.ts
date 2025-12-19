@@ -1,5 +1,5 @@
 import axios, { type AxiosResponse, AxiosError } from 'axios';
-import type {LogroGalery,Mission, GymProfile,Assignment, User, MissionCreated, EventResponse, Updateuser, Group, MemberUpdate, CreateGroup, UpdateMissionsParams, UpdateMissionsParamsVote, GymProfileUpdate, AssignmentMissionResponse, MissionType, EventHistory} from "./api.interfaces"
+import type {LogroGalery,Mission, GymProfile,Assignment, User, MissionCreated, EventResponse, Updateuser, Group, MemberUpdate, CreateGroup, UpdateMissionsParams, UpdateMissionsParamsVote, GymProfileUpdate, AssignmentMissionResponse, MissionType, EventHistory, GymProfileInit} from "./api.interfaces"
 
 const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
 const API_BASE_URL = `${BACKEND_URL}/api/v1`;
@@ -27,9 +27,9 @@ apiClient.interceptors.response.use(
 class ApiService {
 
   // METODOS PARA PROFILES
-  async init_profile_gamer(email:string): Promise<string> {
+  async init_profile_gamer(init_profile_data:GymProfileInit): Promise<string> {
     try {
-      const response: AxiosResponse<string> = await apiClient.post(`/profiles`,{email:email});
+      const response: AxiosResponse<string> = await apiClient.post(`/profiles`,init_profile_data);
       return response.data;
     } catch (error) {
       console.error('Error init profile :', error);
@@ -271,9 +271,9 @@ class ApiService {
     }
   }
 
-  async updateUser(userId:string,updateUser:Updateuser): Promise<EventResponse> {
+  async updateUser(updateUser:Updateuser): Promise<EventResponse> {
     try {
-      const response: AxiosResponse<EventResponse> = await apiClient.put(`/users/${userId}`,updateUser);
+      const response: AxiosResponse<EventResponse> = await apiClient.put(`/users`,updateUser);
       return response.data;
     } catch (error) {
       console.error('Error update user:', error);
@@ -284,7 +284,6 @@ class ApiService {
   async register(email:string,password:string,name:string,role:string): Promise<User> {
     try {
       const response: AxiosResponse<User> = await apiClient.post(`/auth/register`, { email, password, name, role});
-      console.log("response register: ",response.data)
       return response.data;
     } catch (error) {
       console.error('Error register user:', error);

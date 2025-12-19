@@ -10,7 +10,7 @@ interface Props {
 
 type EditFormData = {
   apodo: string;
-  titulo: string;
+  frase: string;
   peso_corporal: string;
   pesos: Pesos;
   mujeres: string;
@@ -45,7 +45,7 @@ export const MyGymProfile: React.FC<Props> = ({ userId }) => {
     if (profile) {
       setEditForm({
         apodo: profile.apodo,
-        titulo: profile.titulo,
+        frase: profile.frase,
         peso_corporal: profile.peso_corporal,
         pesos: { ...profile.pesos },
         mujeres: profile.mujeres,
@@ -203,13 +203,13 @@ export const MyGymProfile: React.FC<Props> = ({ userId }) => {
 
                 <div className="mt-4 flex flex-wrap gap-3">
                   <span className="px-4 py-2 bg-slate-700 text-slate-300 rounded-full text-sm border border-slate-600">
-                    {displayData?.titulo || ''}
+                    {displayData?.frase || ''}
                   </span>
                   <span className="px-4 py-2 bg-blue-600/20 text-blue-400 rounded-full text-sm border border-blue-500/30">
                     {displayData?.peso_corporal || ''}
                   </span>
                   <span className="px-4 py-2 bg-slate-700 text-slate-300 rounded-full text-sm border border-slate-600">
-                    {profile.altura}
+                    {profile.estatura}
                   </span>
                 </div>
               </div>
@@ -244,17 +244,17 @@ export const MyGymProfile: React.FC<Props> = ({ userId }) => {
                     </div>
 
                     <div>
-                      <label className="text-slate-400 text-sm font-medium block mb-2">Título:</label>
+                      <label className="text-slate-400 text-sm font-medium block mb-2">Frase:</label>
                       {isEditing ? (
                         <input
                           type="text"
-                          value={displayData?.titulo || ''}
-                          onChange={(e) => updateEditForm('titulo', e.target.value)}
+                          value={displayData?.frase|| ''}
+                          onChange={(e) => updateEditForm('frase', e.target.value)}
                           className="w-full px-4 py-2 bg-slate-600 text-white rounded-lg border border-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-colors"
                           placeholder="Ej: Powerlifter, Bodybuilder, etc."
                         />
                       ) : (
-                        <p className="text-white text-lg">{displayData?.titulo || ''}</p>
+                        <p className="text-white text-lg">{displayData?.frase || ''}</p>
                       )}
                     </div>
 
@@ -312,17 +312,16 @@ export const MyGymProfile: React.FC<Props> = ({ userId }) => {
                   </h3>
                   <div className="space-y-3">
                     <div className="flex justify-between items-center py-2 border-b border-slate-600/50">
+                      <span className="text-slate-400">Estatura:</span>
+                      <span className="text-red-400 font-bold text-lg">{profile.estatura}cm</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-slate-600/50">
                       <span className="text-slate-400">Aura:</span>
                       <span className="text-red-400 font-bold text-lg">{profile.aura}</span>
                     </div>
                     <div className="flex justify-between items-center py-2 border-b border-slate-600/50">
-                      <span className="text-slate-400">Deuda:</span>
-                      <span className="text-white">{profile.deuda.cantidad} ({profile.deuda.tipo})</span>
-                    </div>
-                    <div className="mt-4 p-4 bg-slate-600/30 rounded-lg border border-slate-500">
-                      <p className="text-purple-300 italic text-center">
-                        💬 "{profile.frase}"
-                      </p>
+                      <span className="text-slate-400">Titulo:</span>
+                      <span className="text-red-400 font-bold text-lg">"{profile.titulo}"</span>
                     </div>
                   </div>
                 </div>
