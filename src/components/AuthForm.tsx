@@ -39,19 +39,15 @@ const AuthForms = () => {
 
     try {
       if (isLogin) {
-        console.log("login")
-        const success = await login(formData.email, formData.password);
-        console.log("respuesta de el login",success)
-        if (success) navigate(from, { replace: true });
-        else alert('Error al iniciar sesión. Escribe bien tus credenciales mamaguebo.');
+        const response = await login(formData.email, formData.password);
+        if (response.success) navigate(from, { replace: true });
+        else alert(response.message);
       } else {
-        const success = await register(formData.email, formData.password, formData.name, formData.role);
-        console.log("respuesta de el register",success)
-        if (success) navigate(from, { replace: true });
-        else alert('Error al registrarse. Tu email no es digno.');
+        const response = await register(formData.email, formData.password, formData.name, formData.role);
+        if (response.success) navigate(from, { replace: true });
+        else alert(response.message);
       }
     } catch (error) {
-      console.log("se capturo un error")
       console.error('Auth error:', error);
     } finally {
       setLoading(false);
