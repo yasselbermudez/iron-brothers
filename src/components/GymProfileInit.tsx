@@ -7,6 +7,7 @@ import { Textarea } from './ui/textarea';
 import { Label } from './ui/label';
 import apiService from "../services/api.service";
 import type { GymProfileInit, Pesos } from '../services/api.interfaces';
+import { useToast } from '../hooks/useToast';
 
 interface ProfileDialogProps {
   openInitProfile: boolean;
@@ -37,6 +38,8 @@ export const ProfileInitDialog: React.FC<ProfileDialogProps> = ({
     }
   });
 
+  const {addToast} = useToast()
+
   // Manejar cambios en los campos de texto
   const handleInputChange = (field: keyof Omit<GymProfileInit, 'pesos'>, value: string) => {
     setProfileData(prev => ({
@@ -66,26 +69,34 @@ export const ProfileInitDialog: React.FC<ProfileDialogProps> = ({
 
   // Función para activar el perfil
   const handleActivate = async () => {
-    // Filtrar campos vacíos opcionales
-    const filteredData: GymProfileInit= {
-      ...profileData,
-      pesos: Object.entries(profileData.pesos || {}).reduce((acc, [key, value]) => {
-        if (value) acc[key as keyof Pesos] = value;
-        return acc;
-      }, {} as Pesos)
-    };
-    
-    // Eliminar campos vacíos
-    Object.keys(filteredData).forEach(key => {
-      if (filteredData[key as keyof typeof filteredData] === '') {
-        delete filteredData[key as keyof typeof filteredData];
-      }
-    });
-    
-    await apiService.init_profile_gamer(filteredData)
-    setOpenInitProfile(false);
-    refreshUser(); 
-    
+    try{
+      // Filtrar campos vacíos opcionales
+      const filteredData: GymProfileInit= {
+        ...profileData,
+        pesos: Object.entries(profileData.pesos || {}).reduce((acc, [key, value]) => {
+          if (value) acc[key as keyof Pesos] = value;
+          return acc;
+        }, {} as Pesos)
+      };
+      
+      // Eliminar campos vacíos
+      Object.keys(filteredData).forEach(key => {
+        if (filteredData[key as keyof typeof filteredData] === '') {
+          delete filteredData[key as keyof typeof filteredData];
+        }
+      });
+      
+      await apiService.init_profile_gamer(filteredData)
+      addToast("Perfil iniciado correctamente")
+    } catch(error){
+      console.error("Error al inicial el perfil: ",error)
+      addToast("Error al inicial el perfil","error")
+      setOpenInitProfile(false);
+    }finally{
+      setOpenInitProfile(false);
+      refreshUser();
+    }
+     
   };
 
   return (

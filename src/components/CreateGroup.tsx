@@ -14,6 +14,7 @@ import { Label } from "./ui/label";
 import { Plus } from "lucide-react";
 import apiService from "../services/api.service";
 import type { CreateGroup } from "../services/api.interfaces";
+import { useToast } from "../hooks/useToast";
 
 interface Props {
   open: boolean;
@@ -29,6 +30,7 @@ export function CrearGrupoDialog({ open, onOpenChange,user_data,refreshUser}:Pro
   const [nombreGrupo, setNombreGrupo] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [loading,setLoading] = useState(false);
+  const {addToast} = useToast()
 
 
   const handleCerateGroup = async () => {
@@ -43,12 +45,12 @@ export function CrearGrupoDialog({ open, onOpenChange,user_data,refreshUser}:Pro
             password: contrasena,
         }
         await apiService.createGroup(groupData)
-        
       }
-      console.log("Grupo creado exitosamente");
+      addToast("Grupo creado exitosamente");
     } catch (error) {
       setLoading(false)  
       console.error("Error al crear el grupo:", error);
+      addToast("Error al crear el grupo","error")
     } finally{
         setNombreGrupo("");
         setContrasena("");

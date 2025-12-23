@@ -84,7 +84,7 @@ export const GymProfileCards: React.FC<Props> = ({groupId}) => {
                           {displayData.peso_corporal}
                         </span>
                         <span className="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm">
-                          {profile.altura}
+                          {profile.estatura}
                         </span>
                       </div>
                     </div>
@@ -135,9 +135,6 @@ export const GymProfileCards: React.FC<Props> = ({groupId}) => {
                           <div className="space-y-2">
                             <p className="text-gray-300">
                               <span className="text-gray-400">Aura:</span> <span className="text-red-400 font-bold">{profile.aura}</span>
-                            </p>
-                            <p className="text-gray-300">
-                              <span className="text-gray-400">Deuda:</span> {profile.deuda.cantidad} ({profile.deuda.tipo})
                             </p>
                             <p className="text-purple-300 italic mt-3">
                               💬 "{profile.frase}"

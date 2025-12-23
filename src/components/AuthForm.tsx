@@ -5,6 +5,7 @@ import { Button } from './ui/button';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { useAuth } from '../AuthContext/auth-hooks';
+import { useToast } from '../hooks/useToast';
 
 interface UserData{
   email: string,
@@ -22,7 +23,8 @@ const AuthForms = () => {
     role: 'jugador'
   });
   const [loading, setLoading] = useState(false);
-
+  //Toast
+  const {addToast} = useToast()
   // Agregar navigate y location
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,12 +42,18 @@ const AuthForms = () => {
     try {
       if (isLogin) {
         const response = await login(formData.email, formData.password);
-        if (response.success) navigate(from, { replace: true });
-        else alert(response.message);
+        if (response.success) {
+          navigate(from, { replace: true })
+          addToast("Usuario Autenticado",)    
+        }
+        else addToast(response.message,"error")
       } else {
         const response = await register(formData.email, formData.password, formData.name, formData.role);
-        if (response.success) navigate(from, { replace: true });
-        else alert(response.message);
+        if (response.success){
+          navigate(from, { replace: true })
+          addToast("Registro exitoso",)
+        } 
+        else addToast(response.message,"error")
       }
     } catch (error) {
       console.error('Auth error:', error);

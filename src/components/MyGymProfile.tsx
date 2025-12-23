@@ -3,10 +3,7 @@ import { User, TrendingUp, Edit2, X, Save } from 'lucide-react';
 
 import apiService from '../services/api.service';
 import type { GymProfile, Pesos } from '../services/api.interfaces';
-
-interface Props {
-  userId: string;
-}
+import { useToast } from '../hooks/useToast';
 
 type EditFormData = {
   apodo: string;
@@ -17,25 +14,26 @@ type EditFormData = {
   objetivo: string;
 };
 
-export const MyGymProfile: React.FC<Props> = ({ userId }) => {
+export const MyGymProfile = () => {
   const [profile, setProfile] = useState<GymProfile | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState<EditFormData | null>(null);
   const [loading, setLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
-  const [message, setMessage] = useState('');
+
+  const {addToast} = useToast()
 
   const fetchMyProfile = useCallback(async (): Promise<void> => {
     try {
       setLoading(true);
-      const response = await apiService.getMyGymProfile(userId);
+      const response = await apiService.getMyGymProfile();
       setProfile(response);
     } catch (error) {
       console.error('Error fetching gym profiles:', error);
     } finally {
       setLoading(false);
     }
-  }, [userId]);
+  }, []);
 
   useEffect(() => {
     fetchMyProfile();
@@ -64,7 +62,6 @@ export const MyGymProfile: React.FC<Props> = ({ userId }) => {
     if (!profile || !editForm) return;
 
     setSaveLoading(true);
-    setMessage('');
 
     try {
       const response = await apiService.updateGymProfile(editForm);
@@ -73,13 +70,11 @@ export const MyGymProfile: React.FC<Props> = ({ userId }) => {
         fetchMyProfile()
         setIsEditing(false);
         setEditForm(null);
-        setMessage('Perfil actualizado correctamente');
-        
-        setTimeout(() => setMessage(''), 3000);
+        addToast("Perfil actualizado correctamente")
       }
     } catch (error) {
       console.error('Error al guardar el perfil:', error);
-      setMessage('Error al guardar el perfil. Intenta nuevamente.');
+      addToast('Error al guardar el perfil. Intenta nuevamente.',"error");
     } finally {
       setSaveLoading(false);
     }
@@ -131,17 +126,6 @@ export const MyGymProfile: React.FC<Props> = ({ userId }) => {
           </h1>
           <p className="text-slate-400">Gestiona y actualiza tu información de entrenamiento</p>
         </div>
-
-        {/* Mensaje de estado */}
-        {message && (
-          <div className={`mb-6 p-4 rounded-lg ${
-            message.includes('Error') 
-              ? 'bg-red-900/50 border border-red-700 text-red-200' 
-              : 'bg-green-900/50 border border-green-700 text-green-200'
-          }`}>
-            {message}
-          </div>
-        )}
 
         {/* Tarjeta del perfil - Siempre expandida */}
         <div className="bg-slate-800 rounded-xl overflow-hidden shadow-2xl border border-slate-700">
