@@ -10,6 +10,7 @@ import Gym from './components/pages/Gym';
 import Missions from './components/pages/Missions';
 import Galery  from './components/pages/Galery';
 import ConsejoEpico from "./components/pages/Consejo";
+import { ToastProvider } from './contexts/ToastContext';
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
 
   return (
     <AuthProvider>
+      <ToastProvider>
       <BrowserRouter>
         <Routes>
           {/* Ruta para autenticación sin header */}
@@ -49,6 +51,7 @@ function App() {
           
         </Routes>
       </BrowserRouter>
+      </ToastProvider>
     </AuthProvider>
   );
 }

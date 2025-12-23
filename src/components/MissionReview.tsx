@@ -3,6 +3,7 @@ import { X, ThumbsUp, ThumbsDown, Users, CheckCircle } from 'lucide-react';
 import apiService from '../services/api.service';
 import type { Assignment, UpdateMissionsParamsVote } from '../services/api.interfaces';
 import { MissionType } from '../services/api.interfaces';
+import { useToast } from '../hooks/useToast';
 interface Props{
   isOpen:boolean,
   onClose: ()=>void
@@ -35,6 +36,8 @@ const MissionReviewModal = ({ isOpen, onClose, users ,me}:Props) => {
   const [selectedMission, setSelectedMission] = useState<PendingMissions|null>(null);
   const [loading, setLoading] = useState(false);
   const [voting, setVoting] = useState(false);
+
+  const {addToast} = useToast()
   
   const totalUsers = users.length
   const players = users.filter(user => user.user_id !== me);
@@ -91,9 +94,10 @@ const MissionReviewModal = ({ isOpen, onClose, users ,me}:Props) => {
       setSelectedMission(null);
 
     } catch (error) {
-      console.error('Error al votar:', error);
-      alert('Error al registrar el voto');
+      console.error('Error al registrar voto:', error);
+      addToast("Error al registrar el voto","error")
     } finally {
+      addToast("Voto registrado")
       setVoting(false);
     }
   };

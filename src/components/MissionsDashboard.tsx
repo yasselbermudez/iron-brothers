@@ -6,11 +6,12 @@ import type{ MissionAssignment} from "../services/api.interfaces"
 import  {MissionStatus,MissionType,type AssignmentMissionResponse} from "../services/api.interfaces"
 import { Button } from "./ui/button";
 import MissionDialog from "./mission/MissionDialog"
+import { useToast } from '../hooks/useToast';
 
 const MissionsDashboard = ({userId}:{userId:string}) => {
   const [data, setData] = useState<Assignment|null>(null);
   const [activeModal, setActiveModal] = useState<MissionType|null>(null);
-  
+  const {addToast} = useToast()
   const [missionResult, setMissionResult] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   //detalles de mision
@@ -99,12 +100,12 @@ const MissionsDashboard = ({userId}:{userId:string}) => {
       }
     
     try {
-      const result  = await apiService.updateAssignmentParams(updateParams)
-      if(!result.success) throw new Error('Error al actualizar la asignacion');
+      await apiService.updateAssignmentParams(updateParams)
+      addToast("Resultado enviado exitosamente")
       fetchAssignment(); 
     } catch (error) {
-      console.error('Error:', error);
-      alert('Error al enviar el resultado.');
+      console.error('Error enviando resultado de mision:', error);
+      addToast("Error enviando resultado","error")
     } finally {
       setMissionResult('');
       setActiveModal(null);
@@ -117,12 +118,12 @@ const MissionsDashboard = ({userId}:{userId:string}) => {
     if(!data?.person_id) return
     
     try {
-      const result = await apiService.updateAssignment(MissionType.Principal)
-      if(!result.success) throw new Error('Error al asignar la misión secundaria');
+      await apiService.updateAssignment(MissionType.Principal)
+      addToast("Mission principal actualizada")
       await fetchAssignment();
     } catch (error) {
-      console.error('Error:', error);
-      alert('Hubo un error al actualizar la misión principal');
+      console.error('Error actualizando mision principal:', error);
+      addToast('Error actualizando mision principal',"error");
     } finally {
       setIsUpdating(false);
     }
@@ -134,13 +135,12 @@ const MissionsDashboard = ({userId}:{userId:string}) => {
     if(!data?.person_id) return
     
     try {
-      const result = await apiService.updateAssignment(MissionType.Secondary)
-      if(!result.success) throw new Error('Error al asignar la misión secundaria');
+      await apiService.updateAssignment(MissionType.Secondary)
+      addToast('Mission secundaria generada exitosamente');
       await fetchAssignment();
-      
     } catch (error) {
-      console.error('Error:', error);
-      alert('Hubo un error al generar la misión secundaria. Por favor, intenta de nuevo.');
+      console.error('Error generando mision secundaria:', error);
+      addToast('No se pudo generar la mision secundaria',"error");
     } finally {
       setIsGenerating(false);
     }
