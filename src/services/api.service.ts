@@ -1,5 +1,24 @@
-import axios, { type AxiosResponse, AxiosError } from 'axios';
-import type {LogroGalery,Mission, GymProfile,Assignment, User, MissionCreated, EventResponse, Updateuser, Group, MemberUpdate, CreateGroup, UpdateMissionsParams, UpdateMissionsParamsVote, GymProfileUpdate, AssignmentMissionResponse, MissionType, EventHistory, GymProfileInit} from "./api.interfaces"
+import axios, { type AxiosResponse, type InternalAxiosRequestConfig, AxiosError } from 'axios';
+import type {
+  LogroGalery,
+  Mission, 
+  GymProfile,
+  Assignment, 
+  User, 
+  MissionCreated, 
+  EventResponse, 
+  UpdateUser, 
+  Group, 
+  MemberUpdate, 
+  CreateGroup, 
+  UpdateMissionsParams, 
+  UpdateMissionsParamsVote, 
+  GymProfileUpdate, 
+  AssignmentMissionResponse, 
+  MissionType, 
+  EventHistory, 
+  GymProfileInit
+} from "./api.interfaces"
 
 const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
 const API_BASE_URL = `${BACKEND_URL}/api/v1`;
@@ -14,17 +33,106 @@ const apiClient = axios.create({
   },
 });
 
-// Interceptor para manejar errores globalmente
+// Interceptor para manejar respuestas y errores globalmente
 apiClient.interceptors.response.use(
-  (response) => response,
-  (error: AxiosError) => {
-    console.error('API Error:', error.response?.data || error.message);
+  response => response,
+
+  async (error:AxiosError) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    
+    const isRefreshError = originalRequest.url?.includes('/auth/refresh');
+    const isAuthError = originalRequest.url?.includes('/users/me');
+    const fromLogin = window.location.pathname === '/';
+
+    if (isRefreshError) {
+        window.location.href = '/';
+      return Promise.reject(error);
+    }
+
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthError && !fromLogin) {
+      originalRequest._retry = true;
+      
+      try {
+        // 1. Try to refresh token
+        await apiClient.post(`/auth/refresh`)
+        // 2. Retry doriginala solicitud
+        return apiClient(originalRequest);
+      } catch (refreshError) {
+        
+        return Promise.reject(refreshError);
+      }
+    }
+    // Any error
+    //console.error('API Error:', error.response?.data || error.message);
     return Promise.reject(error);
   }
 );
 
 
 class ApiService {
+
+  //  MÉTODOS PARA AUTENTICACIÓN
+  async login(email:string,password:string): Promise<User> {
+
+    try {
+      const response: AxiosResponse<User> = await apiClient.post(`/auth/login`, { email, password });
+      return response.data;
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
+    }
+  }
+
+  async refresh(): Promise<User> {
+    try {
+      const response: AxiosResponse<User> = await apiClient.post(`/auth/refresh`);
+      return response.data;
+    } catch (error) {
+      console.error('Refresh error:', error);
+      throw error;
+    }
+  }
+  
+  async register(email:string,password:string,name:string,role:string): Promise<User> {
+    try {
+      const response: AxiosResponse<User> = await apiClient.post(`/auth/register`, { email, password, name, role});
+      return response.data;
+    } catch (error) {
+      console.error('Error register user:', error);
+      throw error;
+    }
+  }
+
+  async logout(){
+    try {
+      await apiClient.post(`/auth/logout`);
+    } catch (error) {
+      console.error('Error logout', error);
+      throw error;
+    }
+  }
+
+  async getCurrentUser(): Promise<User> {
+    try {
+      const response: AxiosResponse<User> = await apiClient.get('/users/me');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching current user:', error);
+      throw error;
+    }
+  }
+
+  // USER METHODS
+  async updateUser(updateUser:UpdateUser): Promise<User> {
+    try {
+      const response: AxiosResponse<User> = await apiClient.put(`/users`,updateUser);
+      return response.data;
+    } catch (error) {
+      console.error('Error update user:', error);
+      throw error;
+    }
+  }
+
 
   // METODOS PARA PROFILES
   async init_profile_gamer(init_profile_data:GymProfileInit): Promise<string> {
@@ -99,9 +207,9 @@ class ApiService {
     }
   }
 
-  async getMyGymProfile(userId:string): Promise<GymProfile> {
+  async getMyGymProfile(): Promise<GymProfile> {
     try {
-      const response: AxiosResponse<GymProfile> = await apiClient.get(`/profiles/${userId}`);
+      const response: AxiosResponse<GymProfile> = await apiClient.get(`/profiles`);
       return response.data;
     } catch (error) {
       console.error('Error fetching my gym profile:', error);
@@ -139,9 +247,9 @@ class ApiService {
     }
   }
 
-  async updateAssignment(missionType:MissionType): Promise<EventResponse> {
+  async updateAssignment(missionType:MissionType): Promise<Assignment> {
     try {
-      const response: AxiosResponse<EventResponse> = await apiClient.put(`/assignments/missions/${missionType}`);
+      const response: AxiosResponse<Assignment> = await apiClient.put(`/assignments/missions/${missionType}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching the assignments:', error);
@@ -149,9 +257,9 @@ class ApiService {
     }
   }
 
-  async updateAssignmentParams(updateData:UpdateMissionsParams): Promise<EventResponse> {
+  async updateAssignmentParams(updateData:UpdateMissionsParams): Promise<Assignment> {
     try {
-      const response: AxiosResponse<EventResponse> = await apiClient.put(`/assignments/missions/params`,updateData);
+      const response: AxiosResponse<Assignment> = await apiClient.put(`/assignments/missions/params`,updateData);
       return response.data;
     } catch (error) {
       console.error('Error fetching the assignments:', error);
@@ -229,9 +337,9 @@ class ApiService {
     }
   }
 
-  async getHistory(userId:string): Promise<EventHistory[]> {
+  async getHistory(): Promise<EventHistory[]> {
     try {
-      const response: AxiosResponse<EventHistory[]> = await apiClient.get(`/history/${userId}`);
+      const response: AxiosResponse<EventHistory[]> = await apiClient.get(`/history`);
       return response.data;
     } catch (error) {
       console.error('Error fetching all groups:', error);
@@ -248,57 +356,7 @@ class ApiService {
       throw error;
     }
   }
-
-  async login(email:string,password:string): Promise<User> {
-
-    try {
-      const response: AxiosResponse<User> = await apiClient.post(`/auth/login`, { email, password });
-      return response.data;
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
-    }
-  }
-
-  //  MÉTODOS PARA AUTENTICACIÓN 
-  async getCurrentUser(): Promise<User> {
-    try {
-      const response: AxiosResponse<User> = await apiClient.get('/users/me');
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching current user:', error);
-      throw error;
-    }
-  }
-
-  async updateUser(updateUser:Updateuser): Promise<EventResponse> {
-    try {
-      const response: AxiosResponse<EventResponse> = await apiClient.put(`/users`,updateUser);
-      return response.data;
-    } catch (error) {
-      console.error('Error update user:', error);
-      throw error;
-    }
-  }
-  
-  async register(email:string,password:string,name:string,role:string): Promise<User> {
-    try {
-      const response: AxiosResponse<User> = await apiClient.post(`/auth/register`, { email, password, name, role});
-      return response.data;
-    } catch (error) {
-      console.error('Error register user:', error);
-      throw error;
-    }
-  }
-
-  async logout(){
-    try {
-      await apiClient.post(`/auth/logout`, {}, { withCredentials: true });
-    } catch (error) {
-      console.error('Error logout', error);
-      throw error;
-    }
-  }
+ 
 }
 
 // Exportar una instancia única (Singleton)

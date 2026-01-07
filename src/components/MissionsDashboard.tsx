@@ -100,9 +100,9 @@ const MissionsDashboard = ({userId}:{userId:string}) => {
       }
     
     try {
-      await apiService.updateAssignmentParams(updateParams)
-      addToast("Resultado enviado exitosamente")
-      fetchAssignment(); 
+      const result = await apiService.updateAssignmentParams(updateParams)
+      setData(result)
+      addToast("Resultado enviado exitosamente") 
     } catch (error) {
       console.error('Error enviando resultado de mision:', error);
       addToast("Error enviando resultado","error")
@@ -118,9 +118,9 @@ const MissionsDashboard = ({userId}:{userId:string}) => {
     if(!data?.person_id) return
     
     try {
-      await apiService.updateAssignment(MissionType.Principal)
+      const result = await apiService.updateAssignment(MissionType.Principal)
+      setData(result)
       addToast("Mission principal actualizada")
-      await fetchAssignment();
     } catch (error) {
       console.error('Error actualizando mision principal:', error);
       addToast('Error actualizando mision principal',"error");
@@ -135,9 +135,9 @@ const MissionsDashboard = ({userId}:{userId:string}) => {
     if(!data?.person_id) return
     
     try {
-      await apiService.updateAssignment(MissionType.Secondary)
+      const result = await apiService.updateAssignment(MissionType.Secondary)
+      setData(result)
       addToast('Mission secundaria generada exitosamente');
-      await fetchAssignment();
     } catch (error) {
       console.error('Error generando mision secundaria:', error);
       addToast('No se pudo generar la mision secundaria',"error");
@@ -156,8 +156,8 @@ const MissionsDashboard = ({userId}:{userId:string}) => {
       <div className={`rounded-lg border-2 shadow-lg p-6 transition-all hover:shadow-xl ${statusConfig.bgCard} border-slate-700`}>
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
-            <h2 className="text-xl font-bold text-slate-300 mb-2">{title}</h2>
-            <h3 className="text-2xl font-semibold text-white mb-3">{mission.mission_name}</h3>
+            <h2 className="text-2xl font-semibold text-white mb-3">{mission.mission_name}</h2>
+            <h3 className="font-bold text-slate-300 mb-2">{title}</h3>
           </div>
           <div className={`flex items-center gap-2 px-3 py-1 rounded-full border ${statusConfig.color}`}>
             {statusConfig.icon}
@@ -178,32 +178,30 @@ const MissionsDashboard = ({userId}:{userId:string}) => {
             minute: '2-digit'
           })}</p>
         </div>
+        <div className="grid grid-columns-1 gap-3">
+          {isActive && (
+            <Button
+              onClick={() => setActiveModal(missionType)}
+              className="text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700"
+            >
+              Introducir Resultado
+            </Button>
+          )}
 
-        {isActive && (
-          <button
-            onClick={() => setActiveModal(missionType)}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
-          >
-            Introducir Resultado
-          </button>
-        )}
-
-        {missionsData&& (
-          <Button
-            type="button"
-              variant="outline"
-              onClick={() => {
-                setOpenMissionDetail(true)
-                setMissionDetailType(missionType)
-              }}
-              className="my-3 border-slate-700 text-white hover:bg-slate-800"
-          >
-            Detalles de mision
-          </Button>
-        )}
-
-
-        
+          {missionsData&& (
+            <Button
+              type="button"
+                variant="outline"
+                onClick={() => {
+                  setOpenMissionDetail(true)
+                  setMissionDetailType(missionType)
+                }}
+                className="text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700"
+            >
+              Detalles de mision
+            </Button>
+          )}
+        </div >
       </div>
     );
   };
@@ -224,47 +222,44 @@ const MissionsDashboard = ({userId}:{userId:string}) => {
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-8 text-white text-center">Panel de Misiones</h1>
-
-          {canGenerateSecondaryMission() && (
-          <button
-            onClick={handleGenerateSecondaryMission}
-            disabled={isGenerating}
-            className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 mt-3"
-          >
-            {isUpdating ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                Generando...
-              </>
-            ) : (
-              <>
-                <Plus className="w-5 h-5" />
-                Generar Misión Secundaria
-              </>
-            )}
-          </button>
-        )}
-
-        {canUpdateMission() && (
-          <button
-            onClick={handleUpdateMission}
-            disabled={isGenerating}
-            className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-slate-700 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 mt-3"
-          >
-            {isGenerating ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                actualizando...
-              </>
-            ) : (
-              <>
-                <Plus className="w-5 h-5" />
-                Actualizar Misión Principal
-              </>
-            )}
-          </button>
-        )}
-        
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Button
+                onClick={handleGenerateSecondaryMission}
+                disabled={(isGenerating || !canGenerateSecondaryMission())}
+                className="text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700"
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Generando...
+                  </>
+                ) : (
+                  <>
+                    <Plus className="w-5 h-5" />
+                    Generar Misión Secundaria
+                  </>
+                )}
+              </Button>
+            
+              <Button
+                onClick={handleUpdateMission}
+                disabled={(isUpdating || !canUpdateMission())}
+                className="text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700"
+              >
+                {isUpdating ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Actualizando...
+                  </>
+                ) : (
+                  <>
+                    <Plus className="w-5 h-5" />
+                    Actualizar Misión Principal
+                  </>
+                )}
+              </Button>
+            
+          </div>
         </div>
 
         
@@ -317,6 +312,7 @@ const MissionsDashboard = ({userId}:{userId:string}) => {
           open={openMissionDetail}
           onOpenChange={setOpenMissionDetail}
           mission={missionsData?.mission}
+          result={data?.mission.result? data.mission.result : undefined}
         />
 
       )}
@@ -326,6 +322,7 @@ const MissionsDashboard = ({userId}:{userId:string}) => {
           open={openMissionDetail}
           onOpenChange={setOpenMissionDetail}
           mission={missionsData?.secondary_mission}
+          result={data?.secondary_mission?.result ? data.secondary_mission.result : undefined}
         />
 
       )}

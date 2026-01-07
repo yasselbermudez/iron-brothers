@@ -73,17 +73,10 @@ const MissionReviewModal = ({ isOpen, onClose, users ,me}:Props) => {
     try {
       setVoting(true);
       
-      const voteData:UpdateMissionsParamsVote = approve
-      ?{
+      const voteData:UpdateMissionsParamsVote = {
         mission_type:selectedMission.type,
         group_size: totalUsers,
-        like: 1
-      }
-      :
-      {
-        mission_type:selectedMission.type,
-        group_size: totalUsers,
-        dislike: 1
+        like: approve
       }
       
       const response = await apiService.updateAssignmentVote(selectedPlayerId,voteData)

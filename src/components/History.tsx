@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react';
 import apiService from '../services/api.service';
 import type { EventHistory } from '../services/api.interfaces';
 
-const MissionHistory = ({userId}:{userId:string}) => {
+const MissionHistory = () => {
   
   const [missions, setMissions] = useState<EventHistory[]>([]);
   const [achievements, setAchievements] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchMissions = async () => {
-      const response = await apiService.getHistory(userId)
+      const response = await apiService.getHistory()
       setMissions(response);
       // Extraer logros de misiones completadas
       const completedAchievements = response
@@ -18,7 +18,7 @@ const MissionHistory = ({userId}:{userId:string}) => {
       setAchievements(completedAchievements);
     };
     fetchMissions()
-  }, [userId]);
+  }, []);
 
   const mainMissions = missions.filter(mission => mission.tipo === 'mission');
   const secondaryMissions = missions.filter(mission => mission.tipo === 'secondary_mission');

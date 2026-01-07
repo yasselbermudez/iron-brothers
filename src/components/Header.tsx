@@ -219,7 +219,7 @@ const Header = () => {
                       <Button 
                         onClick={() => setOpenInitProfile(true)} 
                         variant="outline" 
-                        className="w-full bg-red-600/20 text-red-400 border-red-500/30 hover:bg-red-600/30 hover:text-red-300"
+                        className="w-full bg-green-600/20 text-green-400 border-green-500/30 hover:bg-green-600/30 hover:text-green-300"
                       >
                         <Activity className="h-4 w-4 mr-2" />
                         Activar perfil de Jugador
@@ -277,7 +277,7 @@ const Header = () => {
                       <Button 
                           onClick={handleEliminarGrupo} 
                           variant="outline" 
-                          className="w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
+                          className="w-full bg-red-600/20 text-red-400 border-red-500/30 hover:bg-red-600/30 hover:text-red-300"
                         >
                           <Settings2 className="h-4 w-4 mr-2" />
                           Eliminar el grupo actual

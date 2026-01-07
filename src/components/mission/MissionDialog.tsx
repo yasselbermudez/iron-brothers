@@ -1,14 +1,15 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
-import { Trophy, Star, Zap, Crown, Award } from "lucide-react";
+import { Trophy, Star, Zap, Crown, Award, BookCheck} from "lucide-react";
 import type { MissionModal } from "../../services/api.interfaces"
 
 interface MissionDialogProps {
   mission: MissionModal | null;
   open: boolean;
+  result?: string;
   onOpenChange: (open: boolean) => void;
 }
 
-function MissionDialog({ mission, open, onOpenChange }: MissionDialogProps) {
+function MissionDialog({ mission, open, result, onOpenChange }: MissionDialogProps) {
   if (!mission) return null;
 
   const getNivelColor = (nivelNumero: number) => {
@@ -44,6 +45,11 @@ function MissionDialog({ mission, open, onOpenChange }: MissionDialogProps) {
             {mission.nombre}
           </DialogTitle>
         </DialogHeader>
+        
+         <div 
+          className="px-6 pb-6 overflow-y-auto max-h-[calc(90vh-100px)]"
+          style={{ scrollbarWidth: 'thin', scrollbarColor: '#4f46e5 #1e293b' }}
+        >
 
         <div className="space-y-6">
           {/* Descripción */}
@@ -118,10 +124,18 @@ function MissionDialog({ mission, open, onOpenChange }: MissionDialogProps) {
             </div>
           )}
 
-          {/* ID de la misión */}
-          <div className="text-center">
-            <p className="text-xs text-slate-500">ID: {mission.id}</p>
-          </div>
+          {/* Resulttado */}
+          {result && (
+            <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-4 border border-purple-700/30">
+              <h3 className="text-lg font-semibold text-purple-300 mb-2 flex items-center gap-2">
+                <BookCheck className="w-4 h-4" />
+                Resultado:
+              </h3>
+              <p className="text-slate-300 mb-3 leading-relaxed">{result}</p>
+            </div>
+          )}
+
+        </div>
         </div>
       </DialogContent>
     </Dialog>
