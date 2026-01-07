@@ -42,7 +42,7 @@ function Missions() {
           </TabsContent>
 
           <TabsContent value="history" > 
-              <MissionHistory userId={user.id}/>
+              <MissionHistory/>
           </TabsContent>
         </Tabs>
     </main>

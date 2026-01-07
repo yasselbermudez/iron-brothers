@@ -11,28 +11,38 @@ export const AuthProvider = ({ children }:AuthProviderProps) => {
   const [user, setUser] = useState<User|null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Ensure axios sends cookies (for HttpOnly cookie-based auth)
-  axios.defaults.withCredentials = true;
-
   const fetchUser = useCallback( async () => {
     try {
+      setLoading(true)
       const response = await apiService.getCurrentUser()
       setUser(response);
-    } catch (error) {
-      console.error('Error fetching user:', error);
-      logout();
+    } catch {
+      setUser(null); 
     } finally {
       setLoading(false);
     }
   },[])
 
   useEffect(() => {
-    // On mount, try to fetch current user; the browser will send the cookie automatically
     fetchUser();
   },[fetchUser]);
 
   const extractErrorMessage = (error: unknown): string => {
     if (axios.isAxiosError(error)) {
+      if (!error.response) {
+        console.error("Server Not Response:", error.message);
+        switch (error.code){
+          case 'ECONNABORTED':
+            return "La solicitud tardó demasiado. Intenta nuevamente.";
+          case 'ERR_NETWORK':
+            return "No se pudo conectar al servidor. Verifica tu conexión a internet.";
+          case 'ERR_CONNECTION_REFUSED':
+            return "El servidor no está disponible. Intenta más tarde.";
+          default:
+            return "Error de conexión. Verifica tu internet y que el servidor esté en funcionamiento.";
+        }
+      }
+
       const status = error.response?.status;
       const serverMessage = error.response?.data?.detail || error.response?.data?.message;
       console.error("Server Error Message: ",serverMessage)
@@ -47,11 +57,17 @@ export const AuthProvider = ({ children }:AuthProviderProps) => {
           return "Este email ya está registrado. Inicia sesión o usa otro email.";
         case 422:
           return "Datos de entrada inválidos. Verifica todos los campos.";
-        default:
+        case 500:
+        case 502:
+        case 503:
+        case 504:
           return "Error en el servidor. Inténtalo más tarde.";
+        default:
+          return "Ocurrió un error inesperado. Intenta nuevamente.";
       }
     }
-    return "Error de conexión. Verifica tu internet.";
+    console.log("Unknown Error: ", error);
+    return "Ocurrió un error inesperado. Intenta nuevamente.";
   };
 
   const refreshUser = async () => {
@@ -61,7 +77,6 @@ export const AuthProvider = ({ children }:AuthProviderProps) => {
       setUser(response);
     } catch (error) {
       console.error('Error refreshing user:', error);
-      // No hacemos logout aquí para no cerrar sesión por errores temporales
     } finally {
       setLoading(false);
     }
@@ -88,7 +103,6 @@ export const AuthProvider = ({ children }:AuthProviderProps) => {
           message:errorMessage
         };
       }
-      
   };
 
   const register = async (email:string, password:string, name:string, role:string) => {
@@ -117,8 +131,16 @@ export const AuthProvider = ({ children }:AuthProviderProps) => {
   const logout = async () => {
     try {
       await apiService.logout()
+      return {
+          success:true,
+          message:"Logout exitoso"
+        };
     } catch (error) {
-      console.error('Logout error:', error);
+      const errorMessage = extractErrorMessage(error)
+      return {
+        success:false,
+        message:errorMessage
+      };
     } finally {
       setUser(null);
       delete axios.defaults.headers.common['Authorization'];

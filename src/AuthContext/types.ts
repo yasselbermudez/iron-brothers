@@ -25,5 +25,5 @@ export interface AuthContextType {
   login: (email: string, password: string) => Promise<AuthResponse>;
   register: (email:string, password:string, name:string, role:string) => Promise<AuthResponse>
   logout: () => void;
-  refreshUser: () => Promise<void>;
+  refreshUser: () => void
 }

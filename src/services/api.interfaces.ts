@@ -182,8 +182,7 @@ export interface UpdateMissionsParams{
 
 export interface UpdateMissionsParamsVote{
     mission_type: MissionType
-    like?: number
-    dislike?: number
+    like: boolean
     group_size: number
 }
 
@@ -213,7 +212,7 @@ export interface EventResponse{
     success: boolean
 }
 
-export interface Updateuser{
+export interface UpdateUser{
     role?: string
     is_active?: boolean
     group_id?: string

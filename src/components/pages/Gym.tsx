@@ -29,7 +29,7 @@ function Gym() {
           </TabsList>
 
           <TabsContent value="myGymProfile">
-              <MyGymProfile userId={user.id} />
+              <MyGymProfile/>
           </TabsContent>
 
           <TabsContent value="gymProfiles">  
