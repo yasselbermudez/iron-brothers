@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import {GymProfileCards} from '../GymProfiles';
 import { useAuth } from '../../AuthContext/auth-hooks';
-import {MyGymProfile} from "../MyGymProfile";
+import { MyProfile } from "../MyProfile";
 
 function Gym() {
   const { user, loading } = useAuth();
@@ -29,7 +29,7 @@ function Gym() {
           </TabsList>
 
           <TabsContent value="myGymProfile">
-              <MyGymProfile/>
+              <MyProfile/>
           </TabsContent>
 
           <TabsContent value="gymProfiles">  
