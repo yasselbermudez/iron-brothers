@@ -10,7 +10,7 @@ const Layout = ({ children }:AuthProviderProps) => {
   return (
     <div className="min-h-screen bg-slate-950">
       <Header/>
-      <main className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+      <main className="container max-w-7xl mx-auto px-3 py-3 md:px-4 md:px-4  lg:py-5 lg:py-5">
         {children}
       </main>
     </div>

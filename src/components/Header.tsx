@@ -86,9 +86,9 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-slate-900 border-b border-slate-700 text-white sticky top-0 z-50 backdrop-blur-sm bg-slate-900/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+    <header className="bg-slate-900 p-0 border-b border-slate-700 text-white sticky top-0 z-50 backdrop-blur-sm bg-slate-900/80">
+      <div className="max-w-7xl  mx-auto px-3 md:px-4 lg:px-5 py-3 md:py-4 lg:py-5">
+        <div className="flex justify-between items-center">
           {/* Parte izquierda: Menú de navegación y logo */}
           <div className="flex items-center space-x-4">
             {/* Botón del menú de navegación */}
@@ -97,7 +97,7 @@ const Header = () => {
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700"
+                  className="rounded text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700"
                 >
                   <Menu className="h-5 w-5" />
                 </Button>
@@ -140,9 +140,9 @@ const Header = () => {
               <img 
                 src="/icon.png" 
                 alt="Iron Brothers Logo" 
-                className="h-6 w-6 mr-1 object-contain"
+                className="h-6 w-6 md:h-6 md:w-6 lg:h-7 lg:w-7 mr-1 object-contain"
               />
-              <h1 className="text-xl font-bold text-white bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
+              <h1 className="text-3xl md:text-3xl lg:text-4xl mb-0.5 md:mb-1 lg:mb-1 font-bold text-white bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
                 Iron Brothers
               </h1>
             </div>
@@ -152,7 +152,7 @@ const Header = () => {
           <div className="flex items-center space-x-3">
             <Badge 
               variant={user?.role === 'jugador' ? 'default' : 'secondary'} 
-              className="bg-slate-800 text-slate-200 border border-slate-600"
+              className="bg-slate-800 text-slate-200 border rounded border-slate-600"
             >
               {user?.role === 'jugador' ? 'Jugador' : 'Espectador'}
             </Badge>
@@ -162,7 +162,7 @@ const Header = () => {
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700"
+                  className="rounded text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700"
                 >
                   <User className="h-4 w-4 mr-2" />
                   <span className="max-w-32 truncate">{user?.name}</span>
@@ -209,7 +209,7 @@ const Header = () => {
                     <Button 
                       onClick={handleLogout} 
                       variant="outline" 
-                      className="w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
+                      className="rounded-xl w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
                     >
                       <LogOut className="h-4 w-4 mr-2" />
                       Cerrar Sesión
@@ -219,7 +219,7 @@ const Header = () => {
                       <Button 
                         onClick={() => setOpenInitProfile(true)} 
                         variant="outline" 
-                        className="w-full bg-green-600/20 text-green-400 border-green-500/30 hover:bg-green-600/30 hover:text-green-300"
+                        className="rounded-xl w-full bg-green-600/20 text-green-400 border-green-500/30 hover:bg-green-600/30 hover:text-green-300"
                       >
                         <Activity className="h-4 w-4 mr-2" />
                         Activar perfil de Jugador
@@ -229,7 +229,7 @@ const Header = () => {
                         <Button 
                           onClick={handleChangeProfile} 
                           variant="outline" 
-                          className="w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
+                          className="rounded-xl w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
                         >
                           <Settings2 className="h-4 w-4 mr-2" />
                           Configurar Perfil
@@ -241,7 +241,7 @@ const Header = () => {
                       <Button 
                           onClick={()=>setOpenSearchGroup(true)} 
                           variant="outline" 
-                          className="w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
+                          className="rounded-xl w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
                         >
                           <Settings2 className="h-4 w-4 mr-2" />
                           Unirse a un grupo
@@ -254,7 +254,7 @@ const Header = () => {
                       <Button 
                           onClick={()=>setOpenCreateGroup(true)} 
                           variant="outline" 
-                          className="w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
+                          className="rounded-xl w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
                         >
                           <Settings2 className="h-4 w-4 mr-2" />
                           Crear un grupo
@@ -266,7 +266,7 @@ const Header = () => {
                       <Button 
                           onClick={handleSalirGrupo} 
                           variant="outline" 
-                          className="w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
+                          className="rounded-xl w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
                         >
                           <Settings2 className="h-4 w-4 mr-2" />
                           Salir de el grupo actual
@@ -277,7 +277,7 @@ const Header = () => {
                       <Button 
                           onClick={handleEliminarGrupo} 
                           variant="outline" 
-                          className="w-full bg-red-600/20 text-red-400 border-red-500/30 hover:bg-red-600/30 hover:text-red-300"
+                          className="rounded-xl w-full bg-red-600/20 text-red-400 border-red-500/30 hover:bg-red-600/30 hover:text-red-300"
                         >
                           <Settings2 className="h-4 w-4 mr-2" />
                           Eliminar el grupo actual

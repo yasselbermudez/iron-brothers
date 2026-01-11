@@ -17,26 +17,24 @@ function Gym() {
   if (!user) return 
 
   return (
-    <main className="min-h-screen bg-slate-950">
         <Tabs defaultValue="myGymProfile" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-slate-900/50 border border-slate-700 text-white p-0 mb-2 sm:mb-4 lg:mb-6">
-            <TabsTrigger value="myGymProfile" className="data-[state=active]:bg-slate-800 hover:bg-slate-800">
+          <TabsList className="text-slate-500 rounded-xl grid w-full grid-cols-2 bg-slate-900">
+            <TabsTrigger value="myGymProfile" className="data-[state=active]:text-white data-[state=active]:border-slate-700 rounded-xl hover:text-white">
               Mi Perfil
             </TabsTrigger>
-            <TabsTrigger value="gymProfiles" className="data-[state=active]:bg-slate-800 hover:bg-slate-800">
+            <TabsTrigger value="gymProfiles" className="data-[state=active]:text-white data-[state=active]:border-slate-700 rounded-xl hover:text-white">
               Perfil Grupal
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="myGymProfile">
+          <TabsContent value="myGymProfile" className="mt-1 md:mt-2 lg:mt-3">
               <MyProfile/>
           </TabsContent>
 
-          <TabsContent value="gymProfiles">  
+          <TabsContent value="gymProfiles" className="mt-1 md:mt-2 lg:mt-3">  
               <GymProfileCards groupId={user?.group_id}/>
           </TabsContent>
         </Tabs>
-    </main>
   );
 }
 

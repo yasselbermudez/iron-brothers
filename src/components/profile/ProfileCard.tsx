@@ -327,7 +327,10 @@ function InfoItem({ label, value, icon, color }: InfoItemProps) {
       </div>
       <div>
         <Textarea
-        className={`${colorMap[color]} text-right font-medium p-0 border-0 shadow-none resize-none min-h-0 h-auto bg-transparent focus-visible:ring-0 disabled:opacity-100 disabled:cursor-default`}
+        className={`${colorMap[color]} text-right font-medium p-0 border-0 shadow-none resize-none min-h-0 h-auto bg-transparent 
+        focus-visible:ring-0 disabled:opacity-100 disabled:cursor-default 
+        scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent
+        `}
         value={value}
         readOnly
         disabled
