@@ -47,8 +47,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-slate-950">
-
+    <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden">
       {/* Main Content */}
       <main className="flex-grow p-4">
         {/* Hero Section */}
