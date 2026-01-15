@@ -12,16 +12,14 @@ import { Separator } from '../ui/separator';
 
 const MissionsDashboard = ({user}:{user:User}) => {
   
-  const [loading,setLoading] = useState(false)
-
   const [assignament, setAssignament] = useState<Assignment|null>(null);
-  
   const {addToast} = useToast()
   
   //mission details
   const [missionsDetails,setMissionsDetails] = useState<AssignmentMissionDetails|null>(null)
 
   //loading
+  const [loading,setLoading] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -30,9 +28,7 @@ const MissionsDashboard = ({user}:{user:User}) => {
     try {
       setLoading(true)
       const response = await apiService.getAssignament(user.id);
-      const missionsData = await apiService.getAssignamentAllMissions(user.id)
       setAssignament(response)
-      setMissionsDetails(missionsData)
     } catch (error) {
       console.error('Error fetching assignament:', error);
     } finally {
@@ -40,9 +36,23 @@ const MissionsDashboard = ({user}:{user:User}) => {
     }
   },[user.id,user.is_active,])
 
+  const fetchMissionDetails = useCallback(async () => {
+    if(!user.is_active || !user.id) return
+    try {
+      setLoading(true)
+      const missionsData = await apiService.getAssignamentAllMissions(user.id)
+      setMissionsDetails(missionsData)
+    } catch (error) {
+      console.error('Error fetching missions details:', error);
+    } finally {
+      setLoading(false)
+    }
+  },[user.id,user.is_active,])
+
   useEffect(() => {
     fetchAssignment();
-  }, [fetchAssignment]);
+    fetchMissionDetails()
+  }, [fetchAssignment,fetchMissionDetails]);
 
   const canGenerateSecondaryMission = () => {
     
@@ -94,6 +104,10 @@ const MissionsDashboard = ({user}:{user:User}) => {
       setIsGenerating(false);
     }
   };
+
+  const updateMissionDetails = () => {
+    fetchMissionDetails()
+  }
 
   if (!user.is_active) {
     return (
@@ -174,6 +188,7 @@ const MissionsDashboard = ({user}:{user:User}) => {
                 mission={assignament.mission}
                 missionsDetails={missionsDetails?.mission}
                 setAssignament={setAssignament}
+                updateMissionDetails={updateMissionDetails}
               />
             }
             {assignament.secondary_mission && 
@@ -182,6 +197,7 @@ const MissionsDashboard = ({user}:{user:User}) => {
                 mission={assignament.secondary_mission}
                 missionsDetails={missionsDetails?.secondary_mission}
                 setAssignament={setAssignament}
+                updateMissionDetails={updateMissionDetails}
               />
             }
             {assignament.group_mission && 
@@ -190,6 +206,7 @@ const MissionsDashboard = ({user}:{user:User}) => {
                 mission={assignament.group_mission}
                 missionsDetails={missionsDetails?.group_mission}
                 setAssignament={setAssignament}
+                updateMissionDetails={updateMissionDetails}
               />
             }
           </div>

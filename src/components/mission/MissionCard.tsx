@@ -13,9 +13,10 @@ interface MissionCardProps{
     mission:MissionAssignment 
     missionsDetails?:MissionDetails
     setAssignament:(assignment:Assignment)=>void
+    updateMissionDetails: ()=>void
 }
 
-export default function MissionCard ({mission,missionsDetails, missionType,setAssignament}:MissionCardProps){
+export default function MissionCard ({mission,missionsDetails, missionType,setAssignament,updateMissionDetails}:MissionCardProps){
     
     
     const [openResultModal, setOpenResultModal] = useState(false);
@@ -127,6 +128,7 @@ export default function MissionCard ({mission,missionsDetails, missionType,setAs
                     missionName={mission.mission_name}
                     missionType={missionType}
                     setAssignament={setAssignament}
+                    updateMissionDetails={updateMissionDetails}
                     open={openResultModal}
                     onOpenChange={setOpenResultModal}
                 />
