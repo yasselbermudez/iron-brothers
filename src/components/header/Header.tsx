@@ -1,18 +1,22 @@
-import { useAuth } from '../AuthContext/auth-hooks';
+import { useAuth } from '../../AuthContext/auth-hooks';
 import { useEffect, useState } from 'react';
-import {LogOut, User, Menu, Home, Activity, Club, Target, UsersRound , Settings2 } from 'lucide-react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
-import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
+import {LogOut, User, Menu, Home, Activity, Target, UsersRound , Settings2, Album, Loader2} from 'lucide-react';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
 import { useNavigate, useLocation } from 'react-router-dom';
-import apiService from "../services/api.service";
+import apiService from "../../services/api.service";
 import GroupSearchDialog from './GroupSearch';
-import type { MemberUpdate } from '../services/api.interfaces';
+import type { MemberUpdate } from '../../services/api.interfaces';
 import CrearGrupoDialog from './CreateGroup';
-import { ProfileInitDialog } from './GymProfileInit';
+import { InitProfileDialog } from './InitProfileDialog';
+import { useToast } from '../../hooks/useToast';
 
 const Header = () => {
   const { user, logout, refreshUser } = useAuth();
+
+  const [loadingGroup,setLoadingGroup] = useState(false)
+
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
   
@@ -20,16 +24,27 @@ const Header = () => {
   const [openSearchGroup, setOpenSearchGroup] = useState(false);
   const [openCreateGroup, setOpenCreateGroup] = useState(false);
 
+  const [removingGroup,setRemovingGroup] = useState(false)
+  const [deletingGroup,setDeletingGroup] = useState(false)
+
   const [group, setGroup] = useState<{name:string,creator_id:string}|null>(null);
 
+  const {addToast} = useToast()
   const navigate = useNavigate();
   const location = useLocation();
   
   useEffect(() => {
     const fetchGroup = async () => {
-      if(user?.group_id){
-        const group = await apiService.getGroup(user.group_id);
-        setGroup({name: group.group_name, creator_id: group.creator_id});
+      if(user?.group_id){  
+        try{
+          setLoadingGroup(true)
+          const group = await apiService.getGroup(user.group_id);
+          setGroup({name: group.group_name, creator_id: group.creator_id});
+        } catch(error) {
+          console.log("Error cargando grupo: ",error)
+        } finally {
+          setLoadingGroup(false)
+        }
       }
     };
     fetchGroup();
@@ -37,15 +52,13 @@ const Header = () => {
 
   const isAdmin:boolean = group?.creator_id==user?.id
 
-  if(!user) return
+  const groupName = group?.name?group.name:"Unete o crea uno"
 
-  // Definir las rutas de navegación
   const navItems = [
     { path: '/main', label: 'Principal', icon: Home },
-    { path: '/gym', label: 'Gym', icon: Activity },
-    { path: '/missions', label: 'Missions', icon: Activity },
-    { path: '/poker', label: 'Poker', icon: Club },
-    { path: '/galery', label: 'Galery', icon: Target },
+    { path: '/profiles', label: 'Profiles', icon: Activity },
+    { path: '/missions', label: 'Missions', icon: Target },
+    { path: '/galery', label: 'Galery', icon: Album},
     { path: '/consejo', label: 'Consejo', icon: UsersRound },
   ];
 
@@ -62,7 +75,7 @@ const Header = () => {
 
   const handleChangeProfile = () => {
     setIsUserMenuOpen(false);
-    navigate('/gym');
+    navigate('/profiles');
   };
 
   const handleSalirGrupo = async () => {
@@ -73,20 +86,41 @@ const Header = () => {
         user_id: user.id,
         remove: true
       }
-      await apiService.updateMemberGroup(user.group_id,member_data)
-      refreshUser()
+      try{
+        setRemovingGroup(true)
+        await apiService.updateMemberGroup(user.group_id,member_data)
+        addToast("Saliste del grupo")
+      } catch(error){
+        console.log("Error saliendo del grupo: ",error)
+        addToast("Error saliendo del grupo.")
+      } finally {
+        setRemovingGroup(false)
+        refreshUser()
+      }
     }
   };
 
   const handleEliminarGrupo = async () => {
     if (user?.group_id && window.confirm("¿Estás seguro de que quieres eliminar el grupo?")) {
-      await apiService.deletedGroup(user.group_id)
-      refreshUser()
+      
+      try{
+        setDeletingGroup(true)
+        await apiService.deletedGroup(user.group_id)
+        addToast("Grupo eliminado")
+      } catch(error){
+        console.log("Error eliminando grupo: ",error)
+        addToast("Error eliminando grupo.","error")
+      } finally {
+        setDeletingGroup(false)
+        refreshUser()
+      }
     }
   };
 
+  if(!user) return
+
   return (
-    <header className="bg-slate-900 p-0 border-b border-slate-700 text-white sticky top-0 z-50 backdrop-blur-sm bg-slate-900/80">
+    <header className="bg-slate-900 p-0 border-b border-slate-700 text-white sticky top-0 z-55 backdrop-blur-sm bg-slate-900/80">
       <div className="max-w-7xl  mx-auto px-3 md:px-4 lg:px-5 py-3 md:py-4 lg:py-5">
         <div className="flex justify-between items-center">
           {/* Parte izquierda: Menú de navegación y logo */}
@@ -104,10 +138,10 @@ const Header = () => {
               </SheetTrigger>
               <SheetContent 
                 side="left" 
-                className="bg-slate-900 border-r border-slate-700 w-64"
+                className="bg-slate-900 border-r border-slate-700 w-64 text-white"
               >
                 <SheetHeader className="border-b border-slate-700 pb-4">
-                  <SheetTitle className="text-white flex items-center space-x-2">
+                  <SheetTitle className="flex items-center space-x-2">
                     <span>Navegación</span>
                   </SheetTitle>
                 </SheetHeader>
@@ -142,7 +176,7 @@ const Header = () => {
                 alt="Iron Brothers Logo" 
                 className="h-6 w-6 md:h-6 md:w-6 lg:h-7 lg:w-7 mr-1 object-contain"
               />
-              <h1 className="text-3xl md:text-3xl lg:text-4xl mb-0.5 md:mb-1 lg:mb-1 font-bold text-white bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl mb-0.5 md:mb-1 lg:mb-1 font-bold text-white bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
                 Iron Brothers
               </h1>
             </div>
@@ -152,7 +186,7 @@ const Header = () => {
           <div className="flex items-center space-x-3">
             <Badge 
               variant={user?.role === 'jugador' ? 'default' : 'secondary'} 
-              className="bg-slate-800 text-slate-200 border rounded border-slate-600"
+              className="bg-slate-800 text-slate-200 border rounded border-slate-600 hidden sm:block"
             >
               {user?.role === 'jugador' ? 'Jugador' : 'Espectador'}
             </Badge>
@@ -168,9 +202,9 @@ const Header = () => {
                   <span className="max-w-32 truncate">{user?.name}</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent className="bg-slate-900 border-l border-slate-700 px-5">
+              <SheetContent className="bg-slate-900 border-l border-slate-700 px-5 text-white">
                 <SheetHeader className="border-b border-slate-700 pb-4">
-                  <SheetTitle className="text-white">Perfil de Usuario</SheetTitle>
+                  <SheetTitle>Perfil de Usuario</SheetTitle>
                 </SheetHeader>
                 <div className="space-y-6 mt-6">
                   <div className="space-y-3">
@@ -193,7 +227,12 @@ const Header = () => {
                     </div>
                     <div>
                       <p className="text-sm text-slate-400 mb-1">Grupo</p>
-                      <p className="font-medium text-white">{group?.name?group?.name:"Unete o crea uno"}</p>
+                      <p className="font-medium text-white">
+                        {loadingGroup
+                          ?"Cargando..."
+                          :groupName
+                        }
+                      </p>
                       {isAdmin && (
                         <Badge 
                           variant='default'
@@ -215,80 +254,99 @@ const Header = () => {
                       Cerrar Sesión
                     </Button>
                   
-                    {user?.role == "jugador" && !user?.is_active && (
-                      <Button 
-                        onClick={() => setOpenInitProfile(true)} 
-                        variant="outline" 
-                        className="rounded-xl w-full bg-green-600/20 text-green-400 border-green-500/30 hover:bg-green-600/30 hover:text-green-300"
-                      >
-                        <Activity className="h-4 w-4 mr-2" />
-                        Activar perfil de Jugador
-                      </Button>
-                    )}
-                    {user?.role == "jugador" && user?.is_active && (
-                        <Button 
-                          onClick={handleChangeProfile} 
-                          variant="outline" 
-                          className="rounded-xl w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
-                        >
-                          <Settings2 className="h-4 w-4 mr-2" />
-                          Configurar Perfil
-                        </Button>
-                    )}
+                    {user?.role == "jugador" && 
+                      <>
+                        {!user?.is_active && (
+                          <Button 
+                            onClick={() => setOpenInitProfile(true)} 
+                            variant="outline" 
+                            className="rounded-xl w-full bg-green-600/20 text-green-400 border-green-500/30 hover:bg-green-600/30 hover:text-green-300"
+                          >
+                            <Activity className="h-4 w-4 mr-2" />
+                            Activar perfil de Jugador
+                          </Button>
+                        )}
+                        {user?.is_active &&
+                          <> 
+                            <Button 
+                              onClick={handleChangeProfile} 
+                              variant="outline" 
+                              className="rounded-xl w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
+                            >
+                              <Settings2 className="h-4 w-4 mr-2" />
+                              Configurar Perfil
+                            </Button>
+                            
+                          
+                        
+                        {!loadingGroup && 
+                          <>
+                            {!user?.group_id && 
+                              <>
+                                <Button 
+                                  onClick={()=>setOpenSearchGroup(true)} 
+                                  variant="outline" 
+                                  className="rounded-xl w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
+                                >
+                                  <Settings2 className="h-4 w-4 mr-2" />
+                                  Unirse a un grupo
+                                </Button>
 
-                    {user?.role=="jugador" && user?.is_active && !user?.group_id && (
-                      
-                      <Button 
-                          onClick={()=>setOpenSearchGroup(true)} 
-                          variant="outline" 
-                          className="rounded-xl w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
-                        >
-                          <Settings2 className="h-4 w-4 mr-2" />
-                          Unirse a un grupo
-                        </Button>
+                                <Button 
+                                  onClick={()=>setOpenCreateGroup(true)} 
+                                  variant="outline" 
+                                  className="rounded-xl w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
+                                >
+                                  <Settings2 className="h-4 w-4 mr-2" />
+                                  Crear un grupo
+                                </Button>
+                              </>
+                            }
 
-                    )}
+                          {user?.group_id && 
+                            <>
+                              {!isAdmin && (
+                                <Button 
+                                    onClick={handleSalirGrupo} 
+                                    variant="outline"
+                                    disabled={removingGroup} 
+                                    className="rounded-xl w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
+                                  >
+                                    {removingGroup
+                                      ?<><Loader2 className='animate-spin'/>Abandonando grupo</>
+                                      :<><Settings2/>Abandonar grupo</>
+                                    }
+                                  </Button>
+                              )}
 
-                    {user?.role=="jugador" && user?.is_active && !user?.group_id && (
-                      
-                      <Button 
-                          onClick={()=>setOpenCreateGroup(true)} 
-                          variant="outline" 
-                          className="rounded-xl w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
-                        >
-                          <Settings2 className="h-4 w-4 mr-2" />
-                          Crear un grupo
-                        </Button>
-
-                    )}
-
-                    {user?.group_id && !isAdmin && (
-                      <Button 
-                          onClick={handleSalirGrupo} 
-                          variant="outline" 
-                          className="rounded-xl w-full bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
-                        >
-                          <Settings2 className="h-4 w-4 mr-2" />
-                          Salir de el grupo actual
-                        </Button>
-                    )}
-
-                    {user?.group_id && isAdmin && (
-                      <Button 
-                          onClick={handleEliminarGrupo} 
-                          variant="outline" 
-                          className="rounded-xl w-full bg-red-600/20 text-red-400 border-red-500/30 hover:bg-red-600/30 hover:text-red-300"
-                        >
-                          <Settings2 className="h-4 w-4 mr-2" />
-                          Eliminar el grupo actual
-                        </Button>
-                    )}
-                    
+                              {isAdmin && (
+                                <Button 
+                                    onClick={handleEliminarGrupo} 
+                                    variant="outline" 
+                                    disabled={removingGroup} 
+                                    className="rounded-xl w-full bg-red-600/20 text-red-400 border-red-500/30 hover:bg-red-600/30 hover:text-red-300"
+                                  >
+                                    {deletingGroup
+                                      ?<><Loader2 className='animate-spin'/>Eliminando grupo</>
+                                      :<><Settings2/>Eliminar grupo</>
+                                    }
+                                  </Button>
+                              )}
+                            </>
+                          }
+                          </>
+                        }
+                        
+                        </>
+                        }
+                        
+                      </>
+                    }
                   </div>
                 </div>
                 
                 {openInitProfile && 
-                  <ProfileInitDialog
+                  <InitProfileDialog
                     openInitProfile={openInitProfile}
                     setOpenInitProfile={setOpenInitProfile}
                     refreshUser={refreshUser}

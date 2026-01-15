@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import apiService from '../services/api.service';
-import { type LogroGalery } from '../services/api.interfaces';
+import apiService from '../../services/api.service';
+import { type LogroGalery } from '../../services/api.interfaces';
+import Loader from '../loader';
 
-export default function AllLogros() {
+export default function GaleryLogros() {
   const [logros, setLogros] = useState<LogroGalery[]>([]);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [loadingLogros,setLoadingLogros] = useState(false)
 
   useEffect(() => {
     fetchLogros();
@@ -12,10 +14,13 @@ export default function AllLogros() {
 
   const fetchLogros = async () => {
     try {
+      setLoadingLogros(true)
       const response = await apiService.getAllLogros();
       setLogros(response);
     } catch (error) {
       console.error('Error fetching logros:', error);
+    } finally{
+      setLoadingLogros(false)
     }
   };
 
@@ -46,12 +51,24 @@ export default function AllLogros() {
     }
   };
 
+  if (loadingLogros) {
+    return <Loader text="Cargando galeria de logros"/>
+  }
+    
+  if (!logros) {
+    return (
+      <div className="p-10 text-center ">
+        <div className="text-white text-xl font-semibold">No se pudo cargar la galeria de logros</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-900/50 border border-slate-700 rounded-xl p-4">
      
       <div className="text-center mb-12 relative">
         <div className="absolute inset-0 bg-gradient-to-r from-orange-600 via-red-600 to-purple-600 opacity-20 blur-3xl"></div>
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-red-500 to-purple-500 mb-4 relative z-10 tracking-tight">
+        <h1 className="text-4xl md:text-5xl lg:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-red-500 to-purple-500 mb-4 relative z-10 tracking-tight">
           Logros Epicos
         </h1>
         <p className="text-white text-xl relative z-10 font-medium">Informacion sobre todas los logros</p>
@@ -135,31 +152,6 @@ export default function AllLogros() {
           </div>
         ))}
       </div>
-
-      {/* Footer con estadísticas */}
-      {/*
-      <div className="max-w-7xl mx-auto mt-8 grid grid-cols-3 gap-4">
-        <div className="bg-gradient-to-br from-gray-950 to-black border border-amber-500/20 rounded-lg p-4 text-center">
-          <p className="text-2xl font-bold text-amber-400">
-            {logros.filter(a => a.nivel === "1").length}
-          </p>
-          <p className="text-xs text-gray-500 uppercase tracking-wider">Nivel 1</p>
-        </div>
-        <div className="bg-gradient-to-br from-gray-950 to-black border border-purple-500/20 rounded-lg p-4 text-center">
-          <p className="text-2xl font-bold text-purple-400">
-            {logros.filter(a => a.nivel === "2").length}
-          </p>
-          <p className="text-xs text-gray-500 uppercase tracking-wider">Nivel 2</p>
-        </div>
-        <div className="bg-gradient-to-br from-gray-950 to-black border border-cyan-500/20 rounded-lg p-4 text-center">
-          <p className="text-2xl font-bold text-cyan-400">
-            {logros.filter(a => a.nivel === "3").length}
-          </p>
-          <p className="text-xs text-gray-500 uppercase tracking-wider">Nivel 3</p>
-        </div>
-      </div>
-      */}
-      
     </div>
   );
 }

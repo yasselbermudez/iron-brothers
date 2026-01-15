@@ -14,7 +14,7 @@ import type {
   UpdateMissionsParams, 
   UpdateMissionsParamsVote, 
   GymProfileUpdate, 
-  AssignmentMissionResponse, 
+  AssignmentMissionDetails, 
   MissionType, 
   EventHistory, 
   GymProfileInit
@@ -227,9 +227,9 @@ class ApiService {
     }
   }
 
-  async getAssignamentAllMissions(personId:string): Promise<AssignmentMissionResponse> {
+  async getAssignamentAllMissions(personId:string): Promise<AssignmentMissionDetails> {
     try {
-      const response: AxiosResponse<AssignmentMissionResponse> = await apiClient.get(`/assignments/${personId}/missions`);
+      const response: AxiosResponse<AssignmentMissionDetails> = await apiClient.get(`/assignments/${personId}/missions`);
       return response.data;
     } catch (error) {
       console.error('Error fetching the assignments missions:', error);

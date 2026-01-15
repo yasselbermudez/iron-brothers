@@ -1,15 +1,16 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { useAuth } from '../../AuthContext/auth-hooks';
-import GaleryMissions from "../galery/GaleryMissions";
-import GaleryLogros from "../galery/GaleryLogros";
+import {GroupProfiles} from '../profile/GroupProfiles';
+import { MyProfile } from "../profile/MyProfile";
+import { useAuth } from "../../AuthContext/auth-hooks";
 
-function Galery() {
+function Profiles() {
+  
   const { user } = useAuth();
 
-  if(!user) return
+  if(!user) return  
 
   return (
-        <Tabs defaultValue="myGymProfile" className="w-full">
+        <Tabs defaultValue="myGymProfile">
           <TabsList className="
             text-slate-500 rounded-xl grid 
             sm:w-full grid-cols-2 bg-slate-900
@@ -19,23 +20,23 @@ function Galery() {
             lg:mt-4 lg:mb-2
           ">
             <TabsTrigger value="myGymProfile" className="data-[state=active]:text-white data-[state=active]:border-slate-700 rounded-xl hover:text-white">
-              Todas las Misiones
+              Mi Perfil
             </TabsTrigger>
             <TabsTrigger value="gymProfiles" className="data-[state=active]:text-white data-[state=active]:border-slate-700 rounded-xl hover:text-white">
-              Todos los Logros
+              Perfil Grupal
             </TabsTrigger>
           </TabsList>
           <div className="bg-slate-900 border-t sm:border border-slate-700 sm:rounded-xl min-h-screen">
-            <TabsContent value="myGymProfile">
-                <GaleryMissions/>
+            <TabsContent value="myGymProfile" >
+              <MyProfile user={user}/>
             </TabsContent>
 
-            <TabsContent value="gymProfiles">
-                <GaleryLogros/>
+            <TabsContent value="gymProfiles">  
+                <GroupProfiles user={user}/>
             </TabsContent>
           </div>
         </Tabs>
   );
 }
 
-export default Galery;
+export default Profiles;

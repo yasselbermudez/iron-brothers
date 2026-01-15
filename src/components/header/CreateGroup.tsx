@@ -1,20 +1,19 @@
 import { useState } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Plus } from "lucide-react";
-import apiService from "../services/api.service";
-import type { CreateGroup } from "../services/api.interfaces";
-import { useToast } from "../hooks/useToast";
+  DialogTitle
+} from "../ui/dialog";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Loader2 } from "lucide-react";
+import apiService from "../../services/api.service";
+import type { CreateGroup } from "../../services/api.interfaces";
+import { useToast } from "../../hooks/useToast";
 
 interface Props {
   open: boolean;
@@ -66,17 +65,7 @@ export function CrearGrupoDialog({ open, onOpenChange,user_data,refreshUser}:Pro
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
-        <Button 
-          variant="outline" 
-          className="bg-slate-800 text-white border-slate-600 hover:bg-slate-700 hover:text-white"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Crear Nuevo Grupo
-        </Button>
-      </DialogTrigger>
-
-      <DialogContent className="sm:max-w-[425px] bg-slate-950 border-slate-800 text-white">
+      <DialogContent className="max-w-[95vw] rounded-xl bg-slate-950 border-slate-800 text-white">
         <DialogHeader>
           <DialogTitle className="text-white">Crear Nuevo Grupo</DialogTitle>
           <DialogDescription className="text-slate-400">
@@ -86,7 +75,7 @@ export function CrearGrupoDialog({ open, onOpenChange,user_data,refreshUser}:Pro
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
-            {/* Campo Nombre del Grupo */}
+          
             <div className="space-y-2">
               <Label htmlFor="nombre" className="text-white text-sm font-medium">
                 Nombre del Grupo
@@ -102,7 +91,7 @@ export function CrearGrupoDialog({ open, onOpenChange,user_data,refreshUser}:Pro
               />
             </div>
 
-            {/* Campo Contraseña */}
+            
             <div className="space-y-2">
               <Label htmlFor="contrasena" className="text-white text-sm font-medium">
                 Contraseña
@@ -128,17 +117,22 @@ export function CrearGrupoDialog({ open, onOpenChange,user_data,refreshUser}:Pro
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
+              disabled={loading}
               className="border-slate-700 text-white hover:bg-slate-800"
             >
               Cancelar
             </Button>
+
             <Button 
               type="submit"
               className="bg-blue-600 hover:bg-blue-700 text-white"
               disabled={!nombreGrupo.trim() || contrasena.length < 6|| loading}
             >
-              {loading ? "Creando..." : "Crear Grupo"}
+              {loading
+                ?<><Loader2 className='animate-spin'/>Creando</>
+                :"Crear Grupo"}
             </Button>
+          
           </DialogFooter>
         </form>
       </DialogContent>

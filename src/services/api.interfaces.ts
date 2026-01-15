@@ -37,9 +37,28 @@ export interface SecondaryMission {
   descripcion: string;
 }
 
-export interface AssignmentMissionResponse{
-  mission:Mission
-  secondary_mission:SecondaryMission
+export interface GroupMission {
+  id: string;
+  nombre: string;
+  recompensa: string;
+  descripcion: string;
+}
+
+export interface MissionDetails {
+  id: string;
+  nombre: string;
+  recompensa: string;
+  descripcion: string;
+  imagen?: string;
+  nivel?: Nivel;
+  extra?: Extra;
+  logro?: Logro;
+}
+
+export interface AssignmentMissionDetails{
+  mission?:MissionDetails
+  secondary_mission?:MissionDetails
+  group_mission?:MissionDetails
 }
 
 export interface MissionModal {
@@ -83,16 +102,32 @@ export interface GymProfile {
     edad: string;
     name: string;
     email:string;
-    apodo: string;
-    titulo: string;
+    apodo?: string;
+    titulo?: string;
     peso_corporal: string;
     estatura: string;
     aura: string;
     pesos: Pesos;
-    mujeres: string;
-    frase: string;
-    objetivo: string;
-    img: string;
+    mujeres?: string;
+    frase?: string;
+    objetivo?: string;
+    img?: string;
+}
+
+export interface GymProfileForm{
+    mujeres?: string;  
+    apodo?: string;
+    frase?: string;
+    objetivo?: string;
+    edad: number;
+    peso_corporal: number;
+    estatura: number;
+    pressBanca: number
+    sentadilla: number
+    pesoMuerto: number
+    prensa: number
+    biceps: number
+    description?: string
 }
 
 export interface GymProfileUpdate{
@@ -197,6 +232,7 @@ export interface User{
     role: string
     created_at: string
     is_active: boolean
+    group_id?:string
 }
 
 export interface MissionCreated{
