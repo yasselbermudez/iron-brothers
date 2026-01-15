@@ -10,9 +10,11 @@ import {
 import { Button } from '../ui/button';
 import { useEffect, useRef, useState } from 'react';
 import { ScrollArea } from '../ui/scroll-area';
-import { useAuth } from '../../AuthContext/auth-hooks';
 import { Send } from 'lucide-react';
 import { Input } from '../ui/input';
+import type { User } from '../../services/api.interfaces';
+import ErrorData from '../ErroDataMessage';
+import { Separator } from '../ui/separator';
 
 interface Mensaje {
   id: string;
@@ -23,7 +25,8 @@ interface Mensaje {
 }
 
 interface ChatConsejoProps{
-    chatMembers:ChatMember[]|[]
+    chatMembers:ChatMember[]|null
+    user:User
 }
 
 interface ChatMember{
@@ -35,12 +38,12 @@ interface ChatMember{
 
 type Status = "online"|"offline"
 
-export default function ChatConsejo ({chatMembers}:ChatConsejoProps){
+export default function ChatConsejo ({chatMembers, user}:ChatConsejoProps){
     
-    const {user} = useAuth()
     const [nuevoMensaje, setNuevoMensaje] = useState("");
     const [showConsejoDialog, setShowConsejoDialog] = useState(false);
     const chatContainerRef = useRef<HTMLDivElement | null>(null);
+    
     const [mensajes, setMensajes] = useState<Mensaje[]>([
         {
           id: "1",
@@ -100,30 +103,40 @@ export default function ChatConsejo ({chatMembers}:ChatConsejoProps){
         });
     };
 
-    if (!user) return
-
+    if(!user || !user.is_active || !user.group_id) return (
+      <ErrorData
+        message='Chat del consejo no disponible'
+        description='Asegurate de iniciar el perfil y de pertenecer a un grupo'
+      />
+    )
+  
+    if(!chatMembers) return (
+      <ErrorData
+        message='No se pudo cargar el chat del consejo'
+      />
+    )
+    
     return(
-        <>
-        <Card className="bg-slate-900 border-slate-800">
-              <CardHeader className="border-b border-slate-800">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                    <CardTitle className="text-white">Consejo en Sesión</CardTitle>
-                  </div>
-                  <Button 
-                    onClick={() => setShowConsejoDialog(true)}
-                    className="bg-slate-800 text-white hover:bg-slate-700"
-                  >
-                    🏛️ Convocar Consejo
-                  </Button>
-                </div>
-                <CardDescription className="text-slate-400 pb-2 ">
-                  {mensajes.length} mensajes en el historial
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-0">
-                <ScrollArea className="h-96 p-4" ref={chatContainerRef}>
+      <>
+        <Card className="border-0">
+          <CardHeader className='gap-0'>
+            <CardTitle className="flex text-white text-2xl items-center">
+              <div className="w-4 h-4 mr-2 bg-green-500 rounded-full animate-pulse "></div>
+              Consejo en Sesión
+            </CardTitle>
+            <CardDescription className="text-slate-400 flex items-center justify-between">
+              {mensajes.length} mensajes en el historial
+              <Button 
+                onClick={() => setShowConsejoDialog(true)}
+                className="rounded bg-slate-800 hover:bg-slate-700 hover:text-white"
+              >
+                🏛️ Convocar Consejo
+              </Button>
+            </CardDescription>
+          </CardHeader>
+            <CardContent className="space-y-6">
+              <Separator className='bg-slate-700'/>
+                <ScrollArea className="h-96" ref={chatContainerRef}>
                   <div className="space-y-4">
                     {mensajes.map((msg) => (
                       <div
@@ -136,7 +149,7 @@ export default function ChatConsejo ({chatMembers}:ChatConsejoProps){
                         <div
                           className={`max-w-xs lg:max-w-md rounded-2xl p-4 ${
                             msg.tipo === 'sistema' 
-                              ? 'bg-amber-950/50 border border-amber-900 text-amber-200 text-center' 
+                              ? 'bg-green-950/50 border border-green-900 text-green-200 text-center' 
                               : msg.usuario === user.name
                               ? 'bg-slate-800 border border-slate-700 text-white'
                               : 'bg-blue-950/50 border border-blue-900 text-white'
@@ -148,7 +161,7 @@ export default function ChatConsejo ({chatMembers}:ChatConsejoProps){
                             </div>
                           )}
                           <div className="text-sm">{msg.mensaje}</div>
-                          <div className="text-xs mt-2 text-slate-500">
+                          <div className="text-xs mb-2 text-slate-500">
                             {formatearHora(msg.timestamp)}
                           </div>
                         </div>
@@ -156,14 +169,12 @@ export default function ChatConsejo ({chatMembers}:ChatConsejoProps){
                     ))}
                   </div>
                 </ScrollArea>
-                
-                {/* Input de Mensaje */}
-                <div className="p-4 border-t border-slate-800">
-                  <div className="flex space-x-2">
+                <Separator className='bg-slate-700'/>
+                <div className="flex space-x-2">
                     <Input
                       value={nuevoMensaje}
                       onChange={(e) => setNuevoMensaje(e.target.value)}
-                      onKeyPress={handleKeyPress}
+                      onKeyUp={handleKeyPress}
                       placeholder="Escribe tu mensaje para el consejo..."
                       className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
                     />
@@ -173,7 +184,6 @@ export default function ChatConsejo ({chatMembers}:ChatConsejoProps){
                     >
                       <Send className="w-4 h-4" />
                     </Button>
-                  </div>
                 </div>
               </CardContent>
             </Card>

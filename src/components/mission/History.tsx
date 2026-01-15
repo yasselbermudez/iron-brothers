@@ -1,24 +1,36 @@
 import { useState, useEffect } from 'react';
-import apiService from '../services/api.service';
-import type { EventHistory } from '../services/api.interfaces';
+import apiService from '../../services/api.service';
+import type { EventHistory, User } from '../../services/api.interfaces';
+import Loader from '../loader';
+import { Separator } from '../ui/separator';
 
-const MissionHistory = () => {
+const MissionHistory = ({user}:{user:User}) => {
   
+  const [loading,setLoading] = useState(false)
+
   const [missions, setMissions] = useState<EventHistory[]>([]);
   const [achievements, setAchievements] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchMissions = async () => {
-      const response = await apiService.getHistory()
-      setMissions(response);
-      // Extraer logros de misiones completadas
-      const completedAchievements = response
-        .filter(mission => mission.status === 'completed' && mission.logro_name)
-        .map(mission => mission.logro_name!);
-      setAchievements(completedAchievements);
+      if(!user.is_active) return
+      try{
+        setLoading(true)
+        const response = await apiService.getHistory()
+        setMissions(response);
+        // Extract logros 
+        const completedAchievements = response
+          .filter(mission => mission.status === 'completed' && mission.logro_name)
+          .map(mission => mission.logro_name!);
+        setAchievements(completedAchievements);
+      } catch (error) {
+        console.log("Error cargando historia: ",error)
+      } finally {
+        setLoading(false)
+      }
     };
     fetchMissions()
-  }, []);
+  }, [user.is_active]);
 
   const mainMissions = missions.filter(mission => mission.tipo === 'mission');
   const secondaryMissions = missions.filter(mission => mission.tipo === 'secondary_mission');
@@ -28,7 +40,7 @@ const MissionHistory = () => {
       <div className="flex justify-between items-start">
         <div>
           <h3 className="text-white font-semibold">{mission.name}</h3>
-          <p className="text-slate-300 text-sm mt-1">{mission.result}</p>
+          <p className="text-slate-300 break-words max-w-[20vw] text-sm mt-1">{mission.result}</p>
           {mission.logro_name && (
             <span className="inline-block bg-yellow-500 text-yellow-900 text-xs px-2 py-1 rounded mt-2">
               🏆 {mission.logro_name}
@@ -51,13 +63,38 @@ const MissionHistory = () => {
     </div>
   );
 
+  if (!user.is_active) {
+    return (
+      <div className='p-10 text-center'>
+            <h1 className='text-white text-xl font-semibold'>Historial no disponible</h1>
+            <p className='text-slate-400'>Asegurate de iniciar el perfil</p>
+      </div>
+    );
+  }
+
+  if (loading) {
+      return <Loader text="Cargando historial..."/>
+  }
+
+  if (!missions) {
+    return (
+      <div className='p-10 text-center'>
+            <h1 className='text-white text-xl font-semibold'>Nos se pudo cargar el historial</h1>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-slate-900/50 text-white min-h-screen border border-slate-700 rounded-xl p-6">
-      <h1 className="text-3xl font-bold mb-8 text-center">Historial de Progreso</h1>
+    <div className="text-white rounded-xl p-6">
+      <div className='mb-5'>
+        <h1 className="text-2xl font-bold text-white">Historial de progreso</h1>
+        <p className="text-slate-400">Resultados de misiones y logros obtenidos </p>
+        <Separator className='bg-slate-700 mt-5'/>
+      </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
         {/* Misiones Principales */}
-        <section className="bg-slate-900 rounded-xl p-6 shadow-lg">
+        <section className="bg-slate-800 rounded-xl p-6 border border-slate-700">
           <h2 className="text-xl font-bold mb-4 text-blue-400 flex items-center">
             <span className="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
             Misiones Principales
@@ -70,7 +107,7 @@ const MissionHistory = () => {
         </section>
 
         {/* Misiones Secundarias */}
-        <section className="bg-slate-900 rounded-xl p-6 shadow-lg">
+        <section className="bg-slate-800 rounded-xl p-6 border border-slate-700">
           <h2 className="text-xl font-bold mb-4 text-green-400 flex items-center">
             <span className="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
             Misiones Secundarias
@@ -83,7 +120,7 @@ const MissionHistory = () => {
         </section>
 
         {/* Logros */}
-        <section className="bg-slate-900 rounded-xl p-6 shadow-lg">
+        <section className="bg-slate-800 rounded-xl p-6 border border-slate-700">
           <h2 className="text-xl font-bold mb-4 text-yellow-400 flex items-center">
             <span className="text-yellow-500 mr-2">🏆</span>
             Logros Desbloqueados

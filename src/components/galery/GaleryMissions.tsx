@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { ChevronDown, ChevronUp, Trophy, Zap, Star, Flame, X } from 'lucide-react';
-import apiService from "../services/api.service"
-import type {Mission,Nivel,Logro} from "../services/api.interfaces"
+import apiService from "../../services/api.service"
+import type {Mission,Nivel,Logro} from "../../services/api.interfaces"
+import Loader from '../loader';
 
 interface MisionesPorNivel {
   [key: number]: {
@@ -10,23 +11,25 @@ interface MisionesPorNivel {
   };
 }
 
-const MisionesGame = () => {
+const GaleryMissions = () => {
   const [nivelExpandido, setNivelExpandido] = useState<number|null>(null);
   const [logroVisible, setLogroVisible] = useState<{logro:Logro,misionId:string}|null>(null);
   const [missions, setMissions] = useState<Mission[]>([]);
+  const [loadingMissions,setLoadingMissions] = useState(false)
   
-  console.log("Missions:", missions);
-
   useEffect(() => {
     fetchMissions();
   }, []);
 
   const fetchMissions = async () => {
     try {
+      setLoadingMissions(true)
       const response = await apiService.getAllMissions()
       setMissions(response);
     } catch (error) {
       console.error('Error fetching missions:', error);
+    } finally{
+      setLoadingMissions(false)
     }
   };
 
@@ -54,13 +57,25 @@ const MisionesGame = () => {
     setLogroVisible({ logro, misionId });
   };
 
+  if (loadingMissions) {
+    return <Loader text="Cargando galeria de misiones"/>
+  }
+  
+  if (!missions) {
+    return (
+      <div className="p-10 text-center ">
+        <div className="text-white text-xl font-semibold">No se pudo cargar la galeria de misiones</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-slate-900/50 border border-slate-700 rounded-xl p-4">
+    <div className="min-h-screen bg-slate-900/50  rounded-xl p-4">
       <div className="max-w-7xl mx-auto">
 
         <div className="text-center mb-12 relative">
           <div className="absolute inset-0 bg-gradient-to-r from-orange-600 via-red-600 to-purple-600 opacity-20 blur-3xl"></div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-red-500 to-purple-500 mb-4 relative z-10 tracking-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-red-500 to-purple-500 mb-4 relative z-10 tracking-tight">
             Misiones Principales
           </h1>
           <p className="text-white text-xl relative z-10 font-medium">Informacion sobre todas las misiones principales</p>
@@ -104,7 +119,7 @@ const MisionesGame = () => {
                   </div>
                   
                   <div>
-                    <h2 className="text-4xl font-black text-white mb-3 drop-shadow-lg">{nivel.nivel.descripcionNivel}</h2>
+                    <h2 className="text-3xl font-black text-white mb-3 drop-shadow-lg">{nivel.nivel.descripcionNivel}</h2>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 text-yellow-400">
                         <Star className="w-5 h-5 fill-yellow-400" />
@@ -220,4 +235,4 @@ const MisionesGame = () => {
   );
 };
 
-export default MisionesGame;
+export default GaleryMissions;

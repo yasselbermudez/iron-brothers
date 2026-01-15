@@ -1,4 +1,3 @@
-import { useState, type ReactNode } from "react";
 import {
   Card,
   CardHeader,
@@ -35,21 +34,32 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../ui/collapsible";
-import { Textarea} from "../ui/textarea"
+
 import {type GymProfile} from "../../services/api.interfaces"
+
+// Helper Component for Info Items
+interface InfoItemProps {
+  label: string;
+  value: string;
+  icon?: React.ReactNode;
+  color: Color
+}
+
+type Color = "blue"|"red"|"yellow"|"green"|"purple"|"orange"|"pink"
 
 interface ProfileCardProps {
   profileData: GymProfile;
-  expanded?: boolean;
-  children?: ReactNode
+  selectedProfile: string|null;
+  setSelectedProfile: (selectedGroup:string|null)=>void
 }
 
-function ProfileCard({ profileData, expanded, children}: ProfileCardProps) {
-  const [isExpanded, setIsExpanded] = useState(expanded);
-
-const handleToggle = () => {
-    setIsExpanded(!isExpanded);
-};
+function ProfileCard({ profileData,setSelectedProfile,selectedProfile}: ProfileCardProps) {
+  
+  const handleToggle = () => {
+      setSelectedProfile(selectedProfile === profileData.user_id ? null : profileData.user_id);
+  };
+  
+  const isExpanded = selectedProfile===profileData.user_id
 
   const exerciseLabels: Record<string, string> = {
     pressBanca: "Press Banca",
@@ -60,25 +70,26 @@ const handleToggle = () => {
 
   return (
     <Card
+      key={profileData.id}
       className={`
-        p-0
-        md:p-4
-        lg:p-6
+        m
+        py-1
+        md:py-2
+        lg:py-3
         bg-slate-900
         border-slate-700
         transition-all duration-500
         hover:bg-slate-800/50
         ${isExpanded ? "md:col-span-2 lg:col-span-3" : ""}
       `}
+      onClick={handleToggle}
     >
-      <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
+      <Collapsible open={isExpanded} onOpenChange={handleToggle}>
         {/* Header - Always visible */}
-        <CardHeader
-          className="p-2"
-        >
-          <div className="flex items-start gap-4">
+        <CardHeader>
+          <div className="flex items-start py-2 gap-4">
             {/* Avatar */}
-            <div className="relative">
+            <div className="">
               <Avatar className="w-20 h-20 border-2 border-slate-700">
                 <AvatarImage 
                   src={profileData.img} 
@@ -106,38 +117,33 @@ const handleToggle = () => {
                   <CardTitle className="text-2xl font-bold text-white">
                     {profileData.name}
                   </CardTitle>
-                  <CardDescription className="text-lg text-purple-300 italic mt-1">
+                  <CardDescription className="text-lg max-w-[60vw] text-purple-300 break-words italic mt-1">
                     "{profileData.apodo || 'Sin apodo'}"
                   </CardDescription>
                 </div>
-
-                {children}
-
               </div>
-
-              
 
               {/* Tags */}
               <div className="flex justify-between">
-                    <div className="flex flex-wrap gap-2 ">
+                    <div className="flex flex-wrap gap-2">
                         <Badge 
-                        variant="outline" 
-                        className="bg-slate-800/50 text-slate-300 border-slate-600"
-                        >
-                        <Weight className="mr-1 h-3 w-3" />
-                        {profileData.peso_corporal}
+                          variant="outline" 
+                          className="bg-slate-800/50 text-slate-300 border-slate-600"
+                          >
+                          <Weight className="mr-1 h-3 w-3" />
+                          {profileData.peso_corporal}
                         </Badge>
                         <Badge 
-                        variant="outline" 
-                        className="bg-slate-800/50 text-slate-300 border-slate-600"
-                        >
-                        <Ruler className="mr-1 h-3 w-3" />
-                        {profileData.estatura}
+                          variant="outline" 
+                          className="bg-slate-800/50 text-slate-300 border-slate-600"
+                          >
+                          <Ruler className="mr-1 h-3 w-3" />
+                          {profileData.estatura}
                         </Badge>
                         {profileData.mujeres && (
                         <Badge 
                             variant="outline" 
-                            className="bg-pink-600/20 text-pink-300 border-pink-700/30"
+                            className="bg-pink-600/20 text-pink-300 max-w-[0%] break-words border-pink-700/30"
                         >
                             <Heart className="mr-1 h-3 w-3" />
                             {profileData.mujeres}
@@ -146,7 +152,7 @@ const handleToggle = () => {
                     </div>
 
                     <CollapsibleTrigger asChild>
-                        <div className="rounded-xl text-white px-4 pt-5 cursor-pointer">
+                        <div className="text-white text-end cursor-pointer">
                             {isExpanded ? (
                             <ChevronUp/>
                             ) : (
@@ -164,8 +170,8 @@ const handleToggle = () => {
         {/* Expandable Content */}
         <CollapsibleContent className="overflow-hidden data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
 
-          <CardContent className="p-0 md:p-4 lg:p-6">
-            <div className="grid md:grid-cols-2 gap-0 md:gap-6 lg-gap-8 ">
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-0 md:gap-6 lg:gap-8 ">
 
               {/* Left Column */}
               <div className="space-y-6 p-5 border border-slate-700/50 ">
@@ -273,40 +279,25 @@ const handleToggle = () => {
                   </div>
                 </div>
 
-                
               </div>
             </div>
           </CardContent>
-
-          <CardFooter className="pt-4">
-            <div className="flex justify-between items-center w-full">
-              <p></p>
+          <CardFooter className="p-4 justify-end">
               <Button 
                 variant="outline" 
-                size="sm"
-                className="text-slate-300 border-0 hover:bg-slate-800 hover:text-white"
+                size="lg"
+                className="rounded text-slate-400 border-0 hover:bg-slate-800 hover:text-white"
                 onClick={handleToggle}
               >
-                <ChevronUp className="mr-2 h-4 w-4" />
+                <ChevronUp/>
                 Cerrar detalles
               </Button>
-            </div>
           </CardFooter>
         </CollapsibleContent>
       </Collapsible>
     </Card>
   );
 }
-
-// Helper Component for Info Items
-interface InfoItemProps {
-  label: string;
-  value: string;
-  icon?: React.ReactNode;
-  color: Color
-}
-
-type Color = "blue"|"red"|"yellow"|"green"|"purple"|"orange"|"pink"
 
 function InfoItem({ label, value, icon, color }: InfoItemProps) {
   const colorMap = {
@@ -320,22 +311,14 @@ function InfoItem({ label, value, icon, color }: InfoItemProps) {
   };
 
   return (
-    <div className="flex items-start justify-between p-3 bg-slate-900/30 rounded-lg hover:bg-slate-800/30 transition-colors gap-3 ">
+    <div className="flex items-start justify-between p-3 bg-slate-900/30 rounded hover:bg-slate-800/30 transition-colors gap-3 ">
       <div className="flex items-center gap-3 flex-shrink-0">
         {icon}
         <span className="text-white">{label}</span>
       </div>
-      <div>
-        <Textarea
-        className={`${colorMap[color]} text-right font-medium p-0 border-0 shadow-none resize-none min-h-0 h-auto bg-transparent 
-        focus-visible:ring-0 disabled:opacity-100 disabled:cursor-default 
-        scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent
-        `}
-        value={value}
-        readOnly
-        disabled
-      />
-      </div>
+      <p className={`${colorMap[color]} text-right font-medium break-words max-w-[30vw]`}>
+        {value}
+      </p>
     </div>
   );
 }

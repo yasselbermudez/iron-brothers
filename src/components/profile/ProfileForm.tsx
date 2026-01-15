@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Settings2 } from "lucide-react";
+import { Loader2, Settings2 } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -14,38 +14,41 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import { profileFormSchema, type ProfileFormValues} from "./ProfileSchema";
-import type { GymProfileInit } from "../../services/api.interfaces";
+import type { GymProfileInit, GymProfileForm} from "../../services/api.interfaces";
 
 interface ProfileFormProps {
-  initialData?: ProfileFormValues;
+  initialData?: GymProfileForm;
   onSubmit: (data: GymProfileInit) => void;
-
 }
 
 export function ProfileForm({ initialData, onSubmit}: ProfileFormProps) {
+  
   const [descripcionLength, setDescripcionLength] = useState(
-    initialData?.descripcion?.length || 0
+    initialData?.description?.length || 0
   );
 
-  const isInit:boolean = initialData?true:false
+  const [startingProfile,setStartingProfile] = useState(false)
+
+  const isInit:boolean = initialData?false:true
 
   const form = useForm<ProfileFormValues>({
     
     resolver: zodResolver(profileFormSchema),
-
+    
     defaultValues: initialData || {
         edad: 18,
         peso_corporal: 60,
         estatura: 170,
         frase: "",
         apodo: "",
+        mujeres: "",
         objetivo: "",
         pressBanca: 20,
         sentadilla: 50,
         pesoMuerto: 50,
         prensa: 100,
         biceps: 20,
-        descripcion: "",
+        description: "",
     },
   });
 
@@ -63,44 +66,52 @@ export function ProfileForm({ initialData, onSubmit}: ProfileFormProps) {
             biceps:data.biceps.toString()
         },
     }
+    setStartingProfile(true)
     onSubmit(profileData)
   };
+
+  const exercises = [
+    { id: "pressBanca", label: "Press Banca", placeholder: "Ej: 100" },
+    { id: "sentadilla", label: "Sentadilla", placeholder: "Ej: 120" },
+    { id: "pesoMuerto", label: "Peso Muerto", placeholder: "Ej: 150" },
+    { id: "prensa", label: "Prensa", placeholder: "Ej: 200" },
+    { id: "biceps", label: "Bíceps", placeholder: "Ej: 40" },
+  ]
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
         {/* Sección 1: Información Personal */}
-        <div className="bg-slate-900/50 p-6 rounded-lg border border-slate-800">
+        <div className="p-6 rounded-lg bg-slate-900 border border-slate-800">
           <h2 className="text-lg font-semibold text-white mb-4">
             Información Personal
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Edad */}
-           {!isInit &&
-
-           <FormField
-              control={form.control}
-              name="edad"
-              render={({ field }) => (
-                <FormItem className="space-y-2">
-                  <FormLabel className="text-slate-300">Edad</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="Tu edad"
-                      className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={(e) => {
-                        const value = e.target.valueAsNumber;
-                        field.onChange(isNaN(value) ? 0 : value);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-400" />
-                </FormItem>
-              )}
-            />
+           {isInit &&
+              <FormField
+                control={form.control}
+                name="edad"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel className="text-slate-300">Edad</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Tu edad"
+                        className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
+                        {...field}
+                        value={field.value || ""}
+                        onChange={(e) => {
+                          const value = e.target.valueAsNumber;
+                          field.onChange(isNaN(value) ? 0 : value);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
            
            }
             
@@ -133,7 +144,7 @@ export function ProfileForm({ initialData, onSubmit}: ProfileFormProps) {
             />
 
             {/* Estatura */}
-            {!isInit && 
+            {isInit && 
                 <FormField
                     control={form.control}
                     name="estatura"
@@ -173,6 +184,7 @@ export function ProfileForm({ initialData, onSubmit}: ProfileFormProps) {
                       placeholder="Una frase o lema personal que te identifique"
                       className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
                       {...field}
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <FormMessage className="text-red-400" />
@@ -192,6 +204,26 @@ export function ProfileForm({ initialData, onSubmit}: ProfileFormProps) {
                       placeholder="Tu apodo en el gym"
                       className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
                       {...field}
+                      value={field.value || ""}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-400" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="mujeres"
+              render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-slate-300">Mujeres</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Conquistas amorosas"
+                      className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
+                      {...field}
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <FormMessage className="text-red-400" />
@@ -211,28 +243,7 @@ export function ProfileForm({ initialData, onSubmit}: ProfileFormProps) {
                       placeholder="Algún objetivo o proyecto que tengas en mente"
                       className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
                       {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-400" />
-                </FormItem>
-              )}
-            />
-          </div>
-          {/* frase */}
-          <div className="mt-4">
-            <FormField
-              control={form.control}
-              name="frase"
-              render={({ field }) => (
-                <FormItem className="space-y-2">
-                  <FormLabel className="text-slate-300">
-                    Frase Motivacional
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Tu frase o lema personal"
-                      className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
-                      {...field}
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <FormMessage className="text-red-400" />
@@ -243,18 +254,12 @@ export function ProfileForm({ initialData, onSubmit}: ProfileFormProps) {
         </div>
 
         {/* Sección 2: Pesos */}
-        <div className="bg-slate-900/50 p-6 rounded-lg border border-slate-800">
+        <div className="bg-slate-900 p-6 rounded-lg border border-slate-800">
           <h2 className="text-lg font-semibold text-white mb-4">
             Récords de Pesos (kg)
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-              { id: "pressBanca", label: "Press Banca", placeholder: "Ej: 100" },
-              { id: "sentadilla", label: "Sentadilla", placeholder: "Ej: 120" },
-              { id: "pesoMuerto", label: "Peso Muerto", placeholder: "Ej: 150" },
-              { id: "prensa", label: "Prensa", placeholder: "Ej: 200" },
-              { id: "biceps", label: "Bíceps", placeholder: "Ej: 40" },
-            ].map((exercise) => (
+            {exercises.map((exercise) => (
               <FormField
                 key={exercise.id}
                 control={form.control}
@@ -286,53 +291,55 @@ export function ProfileForm({ initialData, onSubmit}: ProfileFormProps) {
         </div>
 
         {/* Sección 3: Descripción */}
-        {!isInit && 
-            <div className="bg-slate-900/50 p-6 rounded-lg border border-slate-800">
-                <h2 className="text-lg font-semibold text-white mb-4">
-                    Resumen / Descripción Personal
-                </h2>
-                <div className="space-y-2">
-                    <FormField
-                    control={form.control}
-                    name="descripcion"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel className="text-slate-300">
-                            Cuéntanos sobre ti, tu experiencia, motivación, etc.
-                        </FormLabel>
-                        <FormControl>
-                            <Textarea
-                            placeholder="Escribe aquí tu descripción personal..."
-                            rows={5}
-                            className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 resize-none"
-                            {...field}
-                            onChange={(e) => {
-                                field.onChange(e.target.value);
-                                setDescripcionLength(e.target.value.length);
-                            }}
-                            />
-                        </FormControl>
-                        <div className="flex justify-between items-center">
-                            <FormMessage className="text-red-400" />
-                            <p className="text-xs text-slate-500 mt-2">
-                            {descripcionLength}/500 caracteres
-                            </p>
-                        </div>
-                        </FormItem>
-                    )}
+        {isInit && 
+          <div className="bg-slate-900 p-6 rounded-lg border border-slate-800">
+            <h2 className="text-lg font-semibold text-white mb-4">
+              Resumen / Descripción Personal
+            </h2>
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-slate-300">
+                    Cuéntanos sobre ti, tu experiencia, motivación, etc.
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Escribe aquí tu descripción personal..."
+                      rows={5}
+                      className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 resize-none"
+                      {...field}
+                      value={field.value || ""}
+                      onChange={(e) => {
+                        field.onChange(e.target.value);
+                        setDescripcionLength(e.target.value.length);
+                      }}
                     />
-                </div>
-            </div>
+                  </FormControl>
+                    <div className="flex justify-between items-center">
+                    <FormMessage className="text-red-400" />
+                      <p className="text-xs text-slate-500 mt-2">
+                        {descripcionLength}/500 caracteres
+                      </p>
+                    </div>
+                </FormItem>
+              )}
+            />
+          </div>
         }
         
         {/* Botón de activación */}
         <Button
           type="submit"
           variant="outline"
+          disabled={startingProfile}
           className="w-full bg-gradient-to-r from-slate-800 to-slate-900 text-white border-slate-700 hover:from-slate-700 hover:to-slate-800 hover:text-white hover:border-slate-600 transition-all duration-300 py-6"
-        >
-          <Settings2 className="h-5 w-5 mr-3" />
-          <span className="text-lg font-semibold">Activar Perfil</span>
+        > 
+          {startingProfile
+            ?<><Loader2 className='animate-spin'/>Procesando</>
+            :<><Settings2/>{isInit?"Activar Perfil":"Enviar"}</>
+          }
         </Button>
       </form>
     </Form>

@@ -6,6 +6,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { useAuth } from '../AuthContext/auth-hooks';
 import { useToast } from '../hooks/useToast';
+import { Loader2 } from 'lucide-react';
 
 interface UserData{
   email: string,
@@ -163,7 +164,7 @@ const AuthForms = () => {
               disabled={loading}
             >
               {loading 
-                ? 'Procesando...' 
+                ? <><Loader2 className='animate-spin'/>Procesando</> 
                 : isLogin 
                   ? 'Iniciar Sesión' 
                   : 'Crear Cuenta'

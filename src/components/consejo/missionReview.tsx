@@ -1,17 +1,19 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { CheckCircle, ThumbsDown, ThumbsUp, Users, X, Vote, CheckCheck } from 'lucide-react';
+import { CheckCircle, ThumbsDown, ThumbsUp, Users, Vote, CheckCheck } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
-import { ScrollArea } from '../ui/scroll-area';
-import { useAuth } from '../../AuthContext/auth-hooks';
-import { MissionStatus,MissionType,type Assignment, type UpdateMissionsParamsVote } from '../../services/api.interfaces';
+import { MissionStatus,MissionType,type Assignment, type UpdateMissionsParamsVote, type User } from '../../services/api.interfaces';
 import apiService from '../../services/api.service';
 import { useToast } from '../../hooks/useToast';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import ErrorData from '../ErroDataMessage';
+import { Separator } from '../ui/separator';
 
 interface ReportProps {
-  chatMembers: ChatMember[] | []
+  chatMembers: ChatMember[] | null
+  user: User
 }
 
 interface ChatMember {
@@ -33,8 +35,8 @@ interface PendingMissions {
   voters: string[]
 }
 
-export default function MissionReview({ chatMembers }: ReportProps) {
-  const {user} = useAuth();
+export default function MissionReview({ chatMembers, user }: ReportProps) {
+
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [playerData, setPlayerData] = useState<Assignment | null>(null);
@@ -43,8 +45,10 @@ export default function MissionReview({ chatMembers }: ReportProps) {
   const [voting, setVoting] = useState(false);
   const {addToast} = useToast()
 
-  const totalUsers = chatMembers.length;
-  const filteredChatMembers = chatMembers.filter(member => member.user_id !== user?.id);
+  const totalUsers = chatMembers?chatMembers.length:0;
+  const filteredChatMembers = chatMembers
+  ?chatMembers.filter(member => member.user_id !== user?.id)
+  :[]
 
   const getInitials = (name: string) => {
     return name
@@ -60,24 +64,15 @@ export default function MissionReview({ chatMembers }: ReportProps) {
 
     try {
       setVoting(true);
-
       const voteData:UpdateMissionsParamsVote = {
             mission_type:selectedMission.type,
             group_size: totalUsers,
             like: approve
         }
-
       await apiService.updateAssignmentVote(selectedPlayerId,voteData)
-        
-      // Refresh data
       await fetchPlayerMissions(selectedPlayerId);
-      
-      // Return to mission list
       setSelectedMission(null);
-
-      // Show success message 
       addToast("Voto registrado con éxito")
-
     } catch (error) {
       console.error('Error al registrar voto:', error);
       addToast("Error al registrar voto","error")
@@ -128,15 +123,13 @@ export default function MissionReview({ chatMembers }: ReportProps) {
     fetchPlayerMissions(userId);
   };
 
-  const onClose = () => {
-    setOpenModal(false);
-    setSelectedPlayerId(null);
-    setPlayerData(null);
-    setSelectedMission(null);
-  };
-
-  if (!user) return null;
-
+  if(!user || !user.is_active || !user.group_id) return (
+    <ErrorData
+      message='Revisar Missiones no disponible'
+      description='Asegurate de iniciar el perfil y de pertenecer a un grupo'
+    />
+  )
+      
   const hasUserVoted = (mission: PendingMissions) => {
     return mission.voters.includes(user.id);
   };
@@ -145,16 +138,25 @@ export default function MissionReview({ chatMembers }: ReportProps) {
     return Math.ceil(totalUsers / 2);
   };
 
+  if(!chatMembers) return (
+    <ErrorData
+      message='No se pudo cargar la revicion de misiones'
+    />
+  )
+
   return (
     <>
-      <Card className="bg-slate-900 border-slate-800">
+      <Card className="border-0">
         <CardHeader>
-          <CardTitle className="text-white">Revisar Resultados de Misión</CardTitle>
+          <CardTitle className="text-white text-2xl">
+            Revisar Resultados de Misión
+          </CardTitle>
           <CardDescription className="text-slate-400">
             Selecciona un miembro para revisar su desempeño en las misiones
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
+          <Separator className='bg-slate-700'/>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {filteredChatMembers.map((member) => (
               <Card
@@ -187,24 +189,17 @@ export default function MissionReview({ chatMembers }: ReportProps) {
       </Card>
 
       {/* Modal */}
-      {openModal && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-900 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden border border-slate-800 flex flex-col">
-            {/* Header */}
-            <div className="bg-slate-950 border-b border-slate-800 px-6 py-4 flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-white">Revisar Resultados</h2>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="text-slate-400 hover:text-slate-200 hover:bg-slate-800"
-              >
-                <X size={24} />
-              </Button>
-            </div>
-
-            {/* Content */}
-            <ScrollArea className="flex-1 px-6 py-4">
+      <Dialog open={openModal} onOpenChange={setOpenModal}>
+       <DialogContent className="max-w-[95vw] p-2 bg-slate-900 border-slate-800 text-white rounded-xl">
+        <DialogHeader className='border-b border-slate-800 p-4'>
+          <DialogTitle className="text-2xl font-bold text-white">
+              Revisar Resultados
+          </DialogTitle>
+        </DialogHeader>
+          <div 
+            className="px-2 pb-2 overflow-y-auto max-h-[70vh]"
+            style={{ scrollbarWidth: 'thin', scrollbarColor: '#fdfdfd #04152e' }}
+          >
               {/* Loading */}
               {loading && (
                 <div className="text-center py-12">
@@ -303,6 +298,7 @@ export default function MissionReview({ chatMembers }: ReportProps) {
               {/* Detalle de Misión Seleccionada */}
               {selectedMission && (
                 <div className="space-y-4">
+                
                   <Button
                     variant="ghost"
                     onClick={() => setSelectedMission(null)}
@@ -335,7 +331,6 @@ export default function MissionReview({ chatMembers }: ReportProps) {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-
                       {/* Votos actuales */}
                       <div className="flex items-center gap-6 p-3 bg-slate-900/50 rounded-lg border border-slate-700">
                         <div className="flex items-center gap-2">
@@ -358,7 +353,7 @@ export default function MissionReview({ chatMembers }: ReportProps) {
 
                       <div className="bg-slate-900 rounded-lg p-4 border border-slate-700">
                         <p className="text-sm font-semibold text-slate-300 mb-2">Resultado enviado:</p>
-                        <p className="text-white leading-relaxed">{selectedMission.result}</p>
+                        <p className="text-white break-words leading-relaxed">{selectedMission.result}</p>
                       </div>
 
                       {!hasUserVoted(selectedMission) && (
@@ -403,10 +398,9 @@ export default function MissionReview({ chatMembers }: ReportProps) {
                   </Card>
                 </div>
               )}
-            </ScrollArea>
           </div>
-        </div>
-      )}
+      </DialogContent>
+    </Dialog>
     </>
   );
 }

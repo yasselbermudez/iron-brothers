@@ -5,19 +5,17 @@ import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 
 import Dashboard from './components/pages/Dashboard';
-import PokerRanking from './components/pages/Poker';
-import Gym from './components/pages/Gym';
+import Profiles from './components/pages/Profiles';
 import Missions from './components/pages/Missions';
 import Galery  from './components/pages/Galery';
-import ConsejoEpico from "./components/pages/Consejo";
+import Consejo from "./components/pages/Consejo";
 import { ToastProvider } from './contexts/ToastContext';
 
 function App() {
 
   const navItems = [
     { id: 'main', label: '/main' },
-    { id: 'gym', label: '/gym' },
-    { id: 'poker', label: '/poker' },
+    { id: 'profiles', label: '/profiles' },
     { id: 'missions', label: '/missions' },
     { id: 'galery', label: '/galery' },
     { id: 'consejo', label: '/consejo' },
@@ -36,11 +34,10 @@ function App() {
             <ProtectedRoute>
               <Layout >
                 {item.id === 'main' && <Dashboard />}
-                {item.id === 'poker' && <PokerRanking />}
-                {item.id === 'gym' && <Gym />}
+                {item.id === 'profiles' && <Profiles />}
                 {item.id === 'missions' && <Missions />}
                 {item.id === 'galery' && <Galery />}
-                {item.id === 'consejo' && <ConsejoEpico />}
+                {item.id === 'consejo' && <Consejo />}
               </Layout>
             </ProtectedRoute>
           } />
