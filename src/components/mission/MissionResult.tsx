@@ -14,9 +14,10 @@ interface MissionResultProps{
     open:boolean
     onOpenChange:(open:boolean)=>void
     setAssignament:(assignment:Assignment)=>void
+    updateMissionDetails: () => void
 }
 
-export default function MissionResult({missionName,missionType,open,onOpenChange,setAssignament}:MissionResultProps){
+export default function MissionResult({missionName,missionType,open,onOpenChange,setAssignament,updateMissionDetails}:MissionResultProps){
 
     const [missionResult, setMissionResult] = useState('');
     const [isSendingResult,setIsSendingResult] = useState(false)
@@ -42,6 +43,7 @@ export default function MissionResult({missionName,missionType,open,onOpenChange
           addToast("Error enviando resultado","error")
         } finally {
           onOpenChange(false);
+          updateMissionDetails()
         }
     };
 
