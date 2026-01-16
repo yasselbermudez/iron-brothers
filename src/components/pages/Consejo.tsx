@@ -4,9 +4,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import type { Group, Member } from '../../services/api.interfaces';
 import { useAuth } from '../../AuthContext/auth-hooks';
 import apiService from '../../services/api.service';
-import ChatConsejo from '../consejo/ChatConsejo';
-import MissionReview from '../consejo/MissionReview';
-import Report from '../consejo/Report';
+import ChatConsejo from '../consejo/chatConsejo';
+import MissionReview from '../consejo/missionReview';
+import Report from '../consejo/report';
 import Loader from '../loader';
 
 interface ChatMember{

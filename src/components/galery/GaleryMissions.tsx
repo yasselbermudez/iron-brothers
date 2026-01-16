@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp, Trophy, Zap, Star, Flame, X } from 'lucide-reac
 import apiService from "../../services/api.service"
 import type {Mission,Nivel,Logro} from "../../services/api.interfaces"
 import Loader from '../loader';
+import { ImageHelper } from '../ImageHelper';
 
 interface MisionesPorNivel {
   [key: number]: {
@@ -90,12 +91,12 @@ const GaleryMissions = () => {
                 className="relative h-64 rounded-2xl overflow-hidden cursor-pointer transform transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl shadow-xl"
               >
                 {/* Imagen de fondo */}
-                <div 
+                <ImageHelper 
+                  imageName={nivel.nivel.imagen}
+                  alt="Iron Brothers background"
                   className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                  style={{ 
-                    backgroundImage: `url(${nivel.nivel.imagen})`,
-                  }}
-                ></div>
+                  isBackground={true}
+                />
                 
                 {/* Overlay oscuro con gradiente */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/40"></div>
@@ -210,8 +211,8 @@ const GaleryMissions = () => {
               {/* Imagen del logro */}
               <div className="mb-6 relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl blur-xl opacity-50"></div>
-                <img 
-                  src={logroVisible.logro.pegatina} 
+                <ImageHelper 
+                  imageName={logroVisible.logro.pegatina} 
                   alt={logroVisible.logro.nombre}
                   className="w-48 h-48 mx-auto object-cover rounded-2xl border-4 border-yellow-500 shadow-2xl relative z-10"
                 />

@@ -72,7 +72,7 @@ const AuthForms = () => {
     <div
       className="w-full max-w-md bg-cover bg-center bg-no-repeat rounded-xl"
       style={{ 
-       backgroundImage: `linear-gradient(to bottom, rgba(1, 8, 45, 0.7), rgba(1, 8, 45,0.8)), url('./assets/brothers.jpg')`,
+       backgroundImage: `linear-gradient(to bottom, rgba(1, 8, 45, 0.7), rgba(1, 8, 45,0.8)), url('/images/brothers.webp')`,
       }}
     >
       <Card 
@@ -85,7 +85,7 @@ const AuthForms = () => {
         <CardHeader className="text-center">
           <div className="flex items-center justify-center mb-4">
             <img 
-              src="/icon.png" 
+              src="/icons/icon.webp" 
               alt="Iron Brothers Logo" 
               className="h-8 w-8 mr-2 object-contain"
             />

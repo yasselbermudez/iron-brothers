@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import apiService from '../../services/api.service';
 import { type LogroGalery } from '../../services/api.interfaces';
 import Loader from '../loader';
+import { ImageHelper } from '../ImageHelper';
 
 export default function GaleryLogros() {
   const [logros, setLogros] = useState<LogroGalery[]>([]);
@@ -101,14 +102,11 @@ export default function GaleryLogros() {
               <div className="p-5">
                 {/* Icono y badge de nivel */}
                 <div className="flex items-start justify-between mb-3">
-                  
-                  <img
-                      src={achievement.pegatina}
-                      alt={achievement.nombre}
-                      className="w-22 h-22 "
-                    />
-
-                  
+                  <ImageHelper 
+                    imageName={achievement.pegatina}
+                    alt={achievement.nombre}
+                    className="w-22 h-22"
+                  />
                 </div>
 
                 {/* Título */}
