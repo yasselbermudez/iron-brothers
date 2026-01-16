@@ -172,7 +172,7 @@ const Header = () => {
             {/* Logo */}
             <div className="flex items-center space-x-2">
               <img 
-                src="/icon.png" 
+                src="/icons/icon.webp" 
                 alt="Iron Brothers Logo" 
                 className="h-6 w-6 md:h-6 md:w-6 lg:h-7 lg:w-7 mr-1 object-contain"
               />
