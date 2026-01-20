@@ -72,7 +72,7 @@ function ProfileCard({ profileData,setSelectedProfile,selectedProfile}: ProfileC
     <Card
       key={profileData.id}
       className={`
-        m
+        p-0
         py-1
         md:py-2
         lg:py-3
@@ -85,12 +85,11 @@ function ProfileCard({ profileData,setSelectedProfile,selectedProfile}: ProfileC
       onClick={handleToggle}
     >
       <Collapsible open={isExpanded} onOpenChange={handleToggle}>
-        {/* Header - Always visible */}
-        <CardHeader>
-          <div className="flex items-start py-2 gap-4">
-            {/* Avatar */}
-            <div className="">
-              <Avatar className="w-20 h-20 border-2 border-slate-700">
+        
+        <CardHeader className="p-2 sm:p-4 gap-4">
+            
+            <CardTitle className="flex text-2xl font-bold text-white items-center">
+              <Avatar className="w-16 h-16 sm:w-20 sm:h-20 border-2 border-slate-700">
                 <AvatarImage 
                   src={profileData.img} 
                   alt={profileData.name}
@@ -100,81 +99,67 @@ function ProfileCard({ profileData,setSelectedProfile,selectedProfile}: ProfileC
                   <User/>
                 </AvatarFallback>
               </Avatar>
-              {profileData.titulo && (
-                <Badge 
-                  className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-purple-600/80 text-white border-purple-800"
-                  variant="secondary"
-                >
-                  {profileData.titulo}
-                </Badge>
-              )}
-            </div>
-
-            {/* Basic Info */}
-            <div className="flex-1 space-y-2">
-              <div className="flex justify-between">
-                <div>
-                  <CardTitle className="text-2xl font-bold text-white">
-                    {profileData.name}
-                  </CardTitle>
-                  <CardDescription className="text-lg max-w-[60vw] text-purple-300 break-words italic mt-1">
-                    "{profileData.apodo || 'Sin apodo'}"
-                  </CardDescription>
+              <div className="m-2">
+                {profileData.name}
+                <div className="text-lg max-w-[60vw] sm:max-w-[40vw] md:max-w-[20vw] lg:max-w-[20vw] text-purple-300 break-words italic mt-1">
+                  "{profileData.apodo || 'Sin apodo'}"
                 </div>
               </div>
-
-              {/* Tags */}
-              <div className="flex justify-between">
-                    <div className="flex flex-wrap gap-2">
-                        <Badge 
-                          variant="outline" 
-                          className="bg-slate-800/50 text-slate-300 border-slate-600"
-                          >
-                          <Weight className="mr-1 h-3 w-3" />
-                          {profileData.peso_corporal}
-                        </Badge>
-                        <Badge 
-                          variant="outline" 
-                          className="bg-slate-800/50 text-slate-300 border-slate-600"
-                          >
-                          <Ruler className="mr-1 h-3 w-3" />
-                          {profileData.estatura}
-                        </Badge>
-                        {profileData.mujeres && (
-                        <Badge 
-                            variant="outline" 
-                            className="bg-pink-600/20 text-pink-300 max-w-[0%] break-words border-pink-700/30"
-                        >
-                            <Heart className="mr-1 h-3 w-3" />
-                            {profileData.mujeres}
-                        </Badge>
-                        )}
-                    </div>
-
-                    <CollapsibleTrigger asChild>
-                        <div className="text-white text-end cursor-pointer">
-                            {isExpanded ? (
-                            <ChevronUp/>
-                            ) : (
-                            <ChevronDown/>
-                            )}
-
-                        </div>
-                    </CollapsibleTrigger>
+              
+            </CardTitle>
+            <CardDescription className="flex justify-between items-end">
+              <div className="flex flex-wrap gap-2 ">
+                {profileData.titulo && (
+                  <Badge 
+                    className="bg-purple-600/80 text-white border-purple-800"
+                    variant="secondary"
+                  >
+                    {profileData.titulo}
+                  </Badge>
+                )}
+                <Badge 
+                  variant="outline" 
+                  className="bg-slate-800/50 text-slate-300 border-slate-600"
+                >
+                  <Weight className="mr-1 h-3 w-3" />
+                  {profileData.peso_corporal}
+                </Badge>
+                <Badge 
+                  variant="outline" 
+                  className="bg-slate-800/50 text-slate-300 border-slate-600"
+                >
+                  <Ruler className="mr-1 h-3 w-3" />
+                  {profileData.estatura}
+                </Badge>
+                {profileData.mujeres && (              
+                  <Badge 
+                    variant="outline" 
+                    className="max-w-[30vw] md:max-w-[20vw] bg-pink-600/20 text-pink-300 break-words border-pink-700/30"
+                  >
+                    <Heart className="mr-1 h-3 w-3" />
+                    {profileData.mujeres}
+                  </Badge>
+                )}
               </div>
+                    <CollapsibleTrigger asChild>
+                      <div className="text-white cursor-pointer">
+                        {isExpanded ? (
+                          <ChevronUp/>
+                        ) : (
+                          <ChevronDown/>
+                        )}
 
-            </div>
-          </div>
+                      </div>
+                    </CollapsibleTrigger>
+                  </CardDescription>
         </CardHeader>
 
         {/* Expandable Content */}
         <CollapsibleContent className="overflow-hidden data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
 
-          <CardContent>
-            <div className="grid md:grid-cols-2 gap-0 md:gap-6 lg:gap-8 ">
-
+          <CardContent className="grid md:grid-cols-2 p-2 sm:p-4 gap-0 md:gap-6 lg:gap-8 ">
               {/* Left Column */}
-              <div className="space-y-6 p-5 border border-slate-700/50 ">
+              <div className="space-y-6 border-t pt-3 sm:p-5 sm:border border-slate-700/50 ">
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                     <User className="h-5 w-5 text-slate-400" />
@@ -245,7 +230,7 @@ function ProfileCard({ profileData,setSelectedProfile,selectedProfile}: ProfileC
 
               {/* Right Column - Personal Records */}
               <div className="space-y-4">
-                <div className="p-5 border border-slate-700/50">
+                <div className="border-t pt-3 sm:p-5 sm:border border-slate-700/50">
                   <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                     <Trophy className="h-5 w-5 text-amber-400" />
                     Record Personal
@@ -280,7 +265,7 @@ function ProfileCard({ profileData,setSelectedProfile,selectedProfile}: ProfileC
                 </div>
 
               </div>
-            </div>
+            
           </CardContent>
           <CardFooter className="p-4 justify-end">
               <Button 
