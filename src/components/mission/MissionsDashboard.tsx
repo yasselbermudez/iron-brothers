@@ -132,8 +132,8 @@ const MissionsDashboard = ({user}:{user:User}) => {
 
   return (
 
-    <Card className='border-0'>
-        <CardHeader>
+    <Card className='border-0 p-0 gap-0'>
+        <CardHeader className='px-2 sm:px-3 sm:pt-3 md:px-4 md:pt-4 lg:px-6 lg:pt-6'>
             <CardTitle className="text-2xl font-bold text-white">
               Panel de Misiones
             </CardTitle>
@@ -141,9 +141,9 @@ const MissionsDashboard = ({user}:{user:User}) => {
               Completa los resultados de misiones pendientes
             </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-2 md:space-y-4 lg:space-y-6 p-2 md:p-4 lg:p-6">
           <Separator className='bg-slate-700'/>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 lg:gap-6'>
             <Button
                 onClick={handleGenerateSecondaryMission}
                 disabled={(isGenerating || !canGenerateSecondaryMission())}
@@ -181,7 +181,7 @@ const MissionsDashboard = ({user}:{user:User}) => {
               </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 lg:gap-6">
             {assignament.mission && 
               <MissionCard
                 missionType={MissionType.Principal}

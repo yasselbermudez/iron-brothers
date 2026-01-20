@@ -118,13 +118,13 @@ export default function ChatConsejo ({chatMembers, user}:ChatConsejoProps){
     
     return(
       <>
-        <Card className="border-0">
-          <CardHeader className='gap-0'>
+        <Card className="border-0 p-0 gap-0">
+          <CardHeader className='px-2 sm:px-3 sm:pt-3 md:px-4 md:pt-4 lg:px-6 lg:pt-6'>
             <CardTitle className="flex text-white text-2xl items-center">
               <div className="w-4 h-4 mr-2 bg-green-500 rounded-full animate-pulse "></div>
               Consejo en Sesión
             </CardTitle>
-            <CardDescription className="text-slate-400 flex items-center justify-between">
+            <CardDescription className="mb-2 text-slate-400 flex items-center justify-between">
               {mensajes.length} mensajes en el historial
               <Button 
                 onClick={() => setShowConsejoDialog(true)}
@@ -134,9 +134,9 @@ export default function ChatConsejo ({chatMembers, user}:ChatConsejoProps){
               </Button>
             </CardDescription>
           </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className='space-y-2 md:space-y-4 lg:space-y-6 p-2 md:p-4 lg:p-6'>
               <Separator className='bg-slate-700'/>
-                <ScrollArea className="h-96" ref={chatContainerRef}>
+                <ScrollArea className="h-[70vh]" ref={chatContainerRef}>
                   <div className="space-y-4">
                     {mensajes.map((msg) => (
                       <div
@@ -147,7 +147,7 @@ export default function ChatConsejo ({chatMembers, user}:ChatConsejoProps){
                         }`}
                       >
                         <div
-                          className={`max-w-xs lg:max-w-md rounded-2xl p-4 ${
+                          className={` lg:max-w-md rounded-2xl p-4 ${
                             msg.tipo === 'sistema' 
                               ? 'bg-green-950/50 border border-green-900 text-green-200 text-center' 
                               : msg.usuario === user.name

@@ -3,6 +3,7 @@ import apiService from '../../services/api.service';
 import type { EventHistory, User } from '../../services/api.interfaces';
 import Loader from '../loader';
 import { Separator } from '../ui/separator';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 
 const MissionHistory = ({user}:{user:User}) => {
   
@@ -85,14 +86,20 @@ const MissionHistory = ({user}:{user:User}) => {
   }
 
   return (
-    <div className="text-white rounded-xl p-6">
-      <div className='mb-5'>
-        <h1 className="text-2xl font-bold text-white">Historial de progreso</h1>
-        <p className="text-slate-400">Resultados de misiones y logros obtenidos </p>
-        <Separator className='bg-slate-700 mt-5'/>
-      </div>
+
+    <Card className='border-0 p-0 gap-0'> 
+      <CardHeader className='px-2 sm:px-3 sm:pt-3 md:px-4 md:pt-4 lg:px-6 lg:pt-6'>
+        <CardTitle className="text-2xl text-white">
+          Historial de progreso
+        </CardTitle>
+        <CardDescription className='flex justify-between flex items-center text-slate-400 '>
+            Resultados de misiones y logros obtenidos 
+        </CardDescription>
+      </CardHeader>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+      <CardContent className='space-y-2 md:space-y-4 lg:space-y-6 p-2 md:p-4 lg:p-6'>
+        <Separator className='bg-slate-700'/>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 md:gap-4 lg:gap-6">
         {/* Misiones Principales */}
         <section className="bg-slate-800 rounded-xl p-6 border border-slate-700">
           <h2 className="text-xl font-bold mb-4 text-blue-400 flex items-center">
@@ -140,7 +147,9 @@ const MissionHistory = ({user}:{user:User}) => {
           </div>
         </section>
       </div>
-    </div>
+
+      </CardContent>
+    </Card>
   );
 };
 

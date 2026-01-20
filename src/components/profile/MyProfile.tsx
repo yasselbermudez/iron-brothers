@@ -97,12 +97,12 @@ export const MyProfile = ({user}:ProfileProps) => {
   }
 
   return (
-    <Card className='border-0'> 
-      <CardHeader className='gap-0'>
+    <Card className='border-0 p-0 gap-0'> 
+      <CardHeader className='px-2 sm:px-3 sm:pt-3 md:px-4 md:pt-4 lg:px-6 lg:pt-6'>
         <CardTitle className="text-2xl text-white">
           Mi Perfil del Gym
         </CardTitle>
-        <CardDescription className='flex justify-between flex items-center text-slate-400'>
+        <CardDescription className='flex justify-between flex items-center text-slate-400 '>
             Gestiona y actualiza tu información de entrenamiento
             <Button
               size="lg"
@@ -114,7 +114,7 @@ export const MyProfile = ({user}:ProfileProps) => {
         </CardDescription>
       </CardHeader>
 
-      <CardContent className='space-y-6'>
+      <CardContent className='space-y-2 md:space-y-4 lg:space-y-6 p-2 md:p-4 lg:p-6'>
         <Separator className='bg-slate-700'/>
         <ProfileCard
             profileData={profile}

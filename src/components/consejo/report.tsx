@@ -103,8 +103,8 @@ export default function Report ({chatMembers, user}:ReportProps){
     )
 
     return(
-        <Card className="border-0">
-              <CardHeader>
+        <Card className="border-0 p-0 gap-0">
+              <CardHeader className='px-2 sm:px-3 sm:pt-3 md:px-4 md:pt-4 lg:px-6 lg:pt-6'>
                 <CardTitle className="text-white text-2xl">
                   Reportar Incidente
                 </CardTitle>
@@ -112,9 +112,9 @@ export default function Report ({chatMembers, user}:ReportProps){
                   Selecciona un miembro del consejo e informa sobre el incidente
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-2 md:space-y-4 lg:space-y-6 p-2 md:p-4 lg:p-6">
                 <Separator className='bg-slate-700'/>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-2 md:gap-4 lg:gap-6">
                   {chatMembers.map((member) => (
                     <Card
                     key={member.user_id}
